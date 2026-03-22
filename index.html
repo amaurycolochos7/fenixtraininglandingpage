@@ -38,9 +38,10 @@
             <!-- Desktop Menu -->
             <div class="hidden md:flex gap-8 font-medium text-sm uppercase tracking-widest items-center">
                 <a href="#inicio" class="hover:text-red-500 transition">Inicio</a>
+                <a href="#filosofia" class="hover:text-red-500 transition">Filosofía</a>
                 <a href="#disciplinas" class="hover:text-red-500 transition">Disciplinas</a>
-                <a href="#horarios" class="hover:text-red-500 transition">Horarios</a>
-                <a href="#contacto" class="hover:text-red-500 transition">Contacto</a>
+                <a href="#coach" class="hover:text-red-500 transition">Head Coach</a>
+                <a href="#horarios" class="hover:text-red-500 transition">Horarios y Costos</a>
             </div>
             
             <div class="hidden md:block">
@@ -57,9 +58,10 @@
         <div id="mobile-menu" class="hidden md:hidden bg-black/95 backdrop-blur-md border-t border-white/10 absolute w-full left-0 top-full">
             <div class="flex flex-col px-4 py-6 space-y-6 font-medium text-sm uppercase tracking-widest text-center shadow-2xl">
                 <a href="#inicio" class="hover:text-red-500 transition mobile-link block">Inicio</a>
+                <a href="#filosofia" class="hover:text-red-500 transition mobile-link block">Filosofía</a>
                 <a href="#disciplinas" class="hover:text-red-500 transition mobile-link block">Disciplinas</a>
-                <a href="#horarios" class="hover:text-red-500 transition mobile-link block">Horarios</a>
-                <a href="#contacto" class="hover:text-red-500 transition mobile-link block">Contacto</a>
+                <a href="#coach" class="hover:text-red-500 transition mobile-link block">Head Coach</a>
+                <a href="#horarios" class="hover:text-red-500 transition mobile-link block">Horarios y Costos</a>
                 <a href="https://wa.me/528671643047" class="mobile-link bg-fenix px-5 py-3 rounded-full text-sm font-bold hover-fenix transition mx-auto inline-block w-4/5">¡ENTRENA YA!</a>
             </div>
         </div>
@@ -89,48 +91,142 @@
         </div>
     </section>
 
-    <!-- Disciplinas / Catálogo -->
-    <section id="disciplinas" class="py-24 px-4 max-w-7xl mx-auto">
+    <!-- Filosofía -->
+    <section id="filosofia" class="py-24 px-4 max-w-7xl mx-auto bg-zinc-900/30 rounded-3xl mt-12 border border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6">NUESTRA <span class="text-red-600">FILOSOFÍA</span></h2>
+                <div class="w-20 h-1 bg-red-600 rounded-full mb-8"></div>
+                <div class="space-y-6 text-gray-300 text-lg">
+                    <p>
+                        <strong class="text-white">Público:</strong> Entrenamiento de alto rendimiento <em>exclusivo para hombres</em> (jóvenes y adultos).
+                    </p>
+                    <p>
+                        <strong class="text-white">Código:</strong> Basado firmemente en el <span class="text-red-500 font-bold">Código Bushido</span> (Honor, Disciplina y Lealtad).
+                    </p>
+                    <p>
+                        <strong class="text-white">Misión:</strong> Ayudar a los hombres a recuperar su fuerza, control y salud a través de las artes marciales y la disciplina inquebrantable.
+                    </p>
+                </div>
+            </div>
+            <div class="relative h-64 md:h-full min-h-[300px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&q=80" alt="Bushido Code" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Head Coach -->
+    <section id="coach" class="py-24 px-4 max-w-7xl mx-auto">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-bold mb-4">Nuestros <span class="text-red-600">Programas</span></h2>
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4">HEAD <span class="text-red-600">COACH</span></h2>
             <div class="w-20 h-1 bg-red-600 mx-auto rounded-full"></div>
         </div>
+        
+        <div class="card-dark p-8 md:p-12 rounded-3xl flex flex-col md:flex-row gap-8 items-center border border-red-600/20 shadow-[0_0_30px_rgba(211,17,24,0.1)] relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 shrink-0 rounded-full overflow-hidden border-4 border-red-600 shadow-xl z-10">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80" alt="Head Coach" class="w-full h-full object-cover">
+            </div>
+            <div class="z-10 text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-2 uppercase">Gustavo Israel Cantú Ávalos</h3>
+                <p class="text-red-500 font-bold tracking-widest uppercase mb-6 text-sm">Oficial Técnico, Juez y Árbitro</p>
+                
+                <ul class="space-y-4 text-gray-300 text-left">
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="award" class="text-red-500 shrink-0 mt-1"></i>
+                        <span>Certificado internacionalmente por la <strong>WBC Muay Thai</strong> y la <strong>FAMM</strong>.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="flame" class="text-red-500 shrink-0 mt-1"></i>
+                        <span>Creador de un <strong>Sistema de Transformación Real</strong>, basado en su propio cambio físico y mental comprobado.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+    <!-- Disciplinas / Catálogo -->
+    <section id="disciplinas" class="py-12 px-4 max-w-7xl mx-auto relative z-10">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4">Nuestras <span class="text-red-600">Disciplinas</span></h2>
+            <div class="w-20 h-1 bg-red-600 mx-auto rounded-full"></div>
+            <p class="mt-6 text-gray-400 max-w-2xl mx-auto">Sistemas de combate estructurados para alcanzar tu máximo nivel físico y técnico.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <!-- Boxeo Clásico -->
+            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-red-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="target" class="text-red-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold uppercase">Boxeo Clásico</h3>
+                    </div>
+                    <p class="text-gray-400">Enfoque puro en técnica, estrategia y acondicionamiento cardiovascular profundo.</p>
+                </div>
+            </div>
+
             <!-- Muay Thai -->
-            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 h-full flex flex-col">
-                <div class="w-16 h-16 bg-red-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition duration-500 shrink-0">
-                    <i data-lucide="swords" class="text-red-600 group-hover:text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">Muay Thai</h3>
-                <p class="text-gray-400 mb-6 flex-grow">El arte de las ocho extremidades. Entrenamiento auténtico enfocado en técnica, potencia y resistencia.</p>
-                <div class="mt-auto items-start flex">
-                    <span class="text-xs font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full uppercase inline-block">Certificación WBC</span>
-                </div>
-            </div>
-
-            <!-- Defensa Personal -->
-            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 h-full flex flex-col">
-                <div class="w-16 h-16 bg-red-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition duration-500 shrink-0">
-                    <i data-lucide="shield-check" class="text-red-600 group-hover:text-white"></i>
-                </div>
-                <h3 class="text-2xl font-bold mb-4">Defensa Personal</h3>
-                <p class="text-gray-400 mb-6 flex-grow">Aprende a protegerte con técnicas efectivas de combate real y control de situaciones de riesgo.</p>
-                <div class="mt-auto items-start flex">
-                    <span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-3 py-1 rounded-full uppercase inline-block">Combate Real</span>
+            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-red-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="swords" class="text-red-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold uppercase">Muay Thai</h3>
+                    </div>
+                    <p class="text-gray-400 mb-4">El letal arte de las 8 extremidades. Entrenamiento de élite avalado oficial.</p>
+                    <span class="text-xs font-bold text-red-500 bg-red-500/10 px-3 py-1 rounded-full uppercase inline-block">WBC Muay Thai</span>
                 </div>
             </div>
 
-            <!-- Acondicionamiento -->
-            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 h-full flex flex-col sm:col-span-2 md:col-span-1">
-                <div class="w-16 h-16 bg-red-600/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition duration-500 shrink-0">
-                    <i data-lucide="dumbbell" class="text-red-600 group-hover:text-white"></i>
+            <!-- MMA -->
+            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-red-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-alert" class="text-red-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold uppercase">MMA</h3>
+                    </div>
+                    <p class="text-gray-400">Artes Marciales Mixtas. La integración definitiva del combate de pie y el dominio en el piso.</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-4">Fitness & Salud</h3>
-                <p class="text-gray-400 mb-6 flex-grow">Programas diseñados para mejorar tu condición física, quemar grasa y fortalecer tu salud mental.</p>
-                <div class="mt-auto items-start flex">
-                    <span class="text-xs font-bold text-orange-500 bg-orange-500/10 px-3 py-1 rounded-full uppercase inline-block">Vida Saludable</span>
+            </div>
+
+            <!-- Catch Wrestling -->
+            <div class="card-dark p-8 rounded-2xl group hover:border-red-600 transition duration-500 flex flex-col h-full relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 bg-red-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="grab" class="text-red-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold uppercase">Catch Wrestling</h3>
+                    </div>
+                    <p class="text-gray-400">Sistema especializado y brutal de lucha y sumisión, para dominar al oponente cuerpo a cuerpo.</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Clase para Mujeres -->
+        <div class="mt-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-900/40 to-black border border-red-500/30 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-8 group">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&q=80')] opacity-10 bg-cover bg-center mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700"></div>
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 bg-red-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
+                    <i data-lucide="star" class="w-3 h-3"></i> Programa Exclusivo
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-bold uppercase mb-3 text-white">Clase Especial para Mujeres</h3>
+                <p class="text-gray-300 text-lg">Apoyo integral en deportes de contacto y acondicionamiento físico extremo.</p>
+            </div>
+            <div class="relative z-10 text-center shrink-0">
+                <p class="text-sm text-red-500 uppercase tracking-widest font-bold mb-1">Impartida por</p>
+                <div class="text-2xl font-bold font-oswald tracking-wide">Rachel Piland</div>
             </div>
         </div>
     </section>
@@ -144,8 +240,16 @@
                     <div class="flex items-start gap-4">
                         <div class="bg-fenix p-3 rounded-lg shrink-0"><i data-lucide="calendar"></i></div>
                         <div>
-                            <h4 class="font-bold text-lg sm:text-xl uppercase">Horario de Sábado</h4>
-                            <p class="text-gray-400 text-sm sm:text-base">8:00 a. m. – 2:00 p. m.</p>
+                            <h4 class="font-bold text-lg sm:text-xl uppercase">Horarios</h4>
+                            <p class="text-gray-400 text-sm sm:text-base font-medium text-yellow-500">[ L-V 7:00-10:00 AM / 5:00-9:00 PM ]</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-fenix p-3 rounded-lg shrink-0"><i data-lucide="wallet"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg sm:text-xl uppercase">Costos</h4>
+                            <p class="text-gray-400 text-sm sm:text-base text-yellow-500">Inscripción: $[MONTO] / Mensualidad: $[MONTO]</p>
+                            <p class="text-gray-400 text-sm sm:text-base text-yellow-500 mt-1">Clase muestra: [EJ: GRATIS / $100 MXN]</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-4">
