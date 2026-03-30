@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videos de Entrenamiento | Fenix Fight System</title>
+    <meta name="description" content="Videos de entrenamiento real de Fenix Fight System - Muay Thai, MMA y más con el Coach Gustavo Israel Cantú Ávalos.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #f5f5f5; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        .text-gradient {
+            background: linear-gradient(to right, #D31118, #FF8C00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-fenix { background-color: #D31118; }
+        .video-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        video { background: #111; }
+
+        /* Lightbox */
+        #video-modal { display: none; }
+        #video-modal.active { display: flex; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition">
+                <div class="flex items-center justify-center" style="mix-blend-mode: screen;">
+                    <img src="logo.png" alt="Logo Fenix" class="h-12 w-auto md:h-16 object-contain drop-shadow-[0_0_15px_rgba(211,17,24,0.4)]" style="filter:contrast(1.2);">
+                </div>
+                <div>
+                    <span class="text-lg font-bold tracking-tighter">FENIX <span class="text-red-600">FIGHT SYSTEM</span></span>
+                    <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold -mt-1">Videos de Entrenamiento</p>
+                </div>
+            </a>
+            <a href="index.html" class="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-full text-sm font-bold uppercase tracking-widest hover:bg-white/5 transition group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                <span class="hidden sm:inline">Volver</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="pt-28 pb-10 px-4 max-w-7xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 bg-red-600/10 border border-red-600/20 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest text-red-500 mb-6">
+            <i data-lucide="video" class="w-3.5 h-3.5"></i> Contenido Real
+        </div>
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">VIDEOS DE <span class="text-gradient">ENTRENAMIENTO</span></h1>
+        <p class="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">Sesiones reales, técnica y combate del equipo Fenix Fight System. Haz clic en cualquier video para verlo en pantalla completa.</p>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent mb-10"></div>
+    </div>
+
+    <!-- Video Grid -->
+    <section class="pb-16 px-4 max-w-7xl mx-auto">
+        <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        </div>
+    </section>
+
+    <!-- CTA Back -->
+    <section class="py-10 px-4 max-w-7xl mx-auto text-center">
+        <a href="index.html" class="inline-flex items-center gap-2 bg-fenix px-8 py-4 rounded-xl font-bold text-base uppercase tracking-widest hover:bg-red-700 transition shadow-lg shadow-red-900/20 group">
+            <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i>
+            Volver a Fenix Fight System
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-black border-t border-white/5 text-center">
+        <p class="text-gray-600 text-xs tracking-widest uppercase">&copy; <span id="current-year"></span> Fenix Fight System. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        const totalVideos = 34;
+        const grid = document.getElementById('video-grid');
+        var currentlyPlaying = null;
+
+        for (let i = 1; i <= totalVideos; i++) {
+            const src = 'media/videos/v' + i + '.mp4';
+            const idx = String(i).padStart(2, '0');
+            const delay = ((i - 1) * 0.04).toFixed(2);
+            const card = document.createElement('div');
+            card.className = 'video-card group relative rounded-2xl overflow-hidden border border-white/10 hover:border-red-500/50 transition-all duration-500 bg-zinc-900 shadow-lg cursor-pointer';
+            card.style.animationDelay = delay + 's';
+
+            card.innerHTML =
+                '<div class="relative aspect-video overflow-hidden">' +
+                    '<video class="w-full h-full object-cover" preload="metadata" playsinline>' +
+                        '<source src="' + src + '#t=0.5" type="video/mp4">' +
+                    '</video>' +
+                    '<div class="play-overlay absolute inset-0 bg-black/40 hover:bg-black/20 transition-all duration-500 flex items-center justify-center">' +
+                        '<div class="w-14 h-14 bg-red-600/90 rounded-full flex items-center justify-center shadow-lg shadow-red-900/40 hover:scale-110 transition-transform duration-300">' +
+                            '<svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="p-3 flex items-center justify-between">' +
+                    '<span class="text-xs font-bold uppercase tracking-widest text-gray-300">Video ' + idx + '</span>' +
+                    '<span class="text-[10px] text-gray-600 uppercase tracking-widest">Fenix FS</span>' +
+                '</div>';
+
+            // Click overlay to play inline
+            card.querySelector('.play-overlay').addEventListener('click', function(e) {
+                e.stopPropagation();
+                var video = this.parentElement.querySelector('video');
+                var overlay = this;
+
+                // Pause any currently playing video
+                if (currentlyPlaying && currentlyPlaying.video !== video) {
+                    currentlyPlaying.video.pause();
+                    currentlyPlaying.video.controls = false;
+                    currentlyPlaying.video.style.objectFit = 'cover';
+                    currentlyPlaying.overlay.style.display = 'flex';
+                }
+
+                video.controls = true;
+                video.muted = false;
+                video.style.objectFit = 'contain';
+                overlay.style.display = 'none';
+                video.play().catch(function(){});
+                currentlyPlaying = { video: video, overlay: overlay };
+
+                video.addEventListener('ended', function() {
+                    video.controls = false;
+                    video.style.objectFit = 'cover';
+                    overlay.style.display = 'flex';
+                    currentlyPlaying = null;
+                });
+            });
+
+            grid.appendChild(card);
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
