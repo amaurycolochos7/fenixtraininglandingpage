@@ -11,7 +11,7 @@ const navItems = [
   { href: "/galeria", label: "Galería" },
   { href: "/videos", label: "Videos" },
   { href: "/#horarios", label: "Horarios" },
-  { href: "/admin", label: "Panel" }
+  { href: "/admin", label: "Panel de vistas" }
 ];
 
 export function SiteHeader() {

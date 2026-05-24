@@ -38,15 +38,15 @@ export function LoginForm() {
           <LockKeyhole size={24} />
         </div>
         <span className="eyebrow">Acceso privado</span>
-        <h1>Panel del cliente</h1>
-        <p>Ingresa la contraseña configurada en Vercel para consultar las métricas.</p>
+        <h1>Panel de vistas</h1>
+        <p>Ingresa el código único de acceso para consultar las métricas.</p>
         <label>
-          Contraseña
+          Código de acceso
           <input
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            placeholder="ADMIN_PASSWORD"
+            placeholder="Código privado"
             autoFocus
           />
         </label>

@@ -1,0 +1,34 @@
+.env
+.env.*
+.next
+node_modules
+.vercel
+vercel
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+tsconfig.tsbuildinfo
+
+# Local verification artifacts
+.next-*.png
+.next-*.log
+.next-*-storage.json
+
+# Legacy static-server files not needed by the Next.js deployment
+index.html
+galeria.html
+videos.html
+server.py
+read_pdf.py
+output.txt
+pdf_text.txt
+check_sizes.ps1
+optimize_media.ps1
+Borrador final del hospital al ring Tavo libro (01).pdf
+
+# Original media copies. Next serves the duplicated assets from public/.
+media
+*.jpg
+*.jpeg
+*.png
+!public/**
