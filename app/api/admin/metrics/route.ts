@@ -53,6 +53,12 @@ function refSource(referrer?: string | null) {
 
   try {
     const host = new URL(referrer).hostname.replace("www.", "");
+    const isFenixDomain =
+      host === "fenixfightsystem.com" ||
+      host === "motopartes1.vercel.app" ||
+      (host.endsWith(".vercel.app") && host.includes("motopartes1"));
+
+    if (isFenixDomain) return "Fenix Fight System";
     if (host.includes("facebook")) return "Facebook";
     if (host.includes("instagram")) return "Instagram";
     if (host.includes("tiktok")) return "TikTok";
