@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   detectBot,
   getClientIp,
@@ -10,11 +11,75 @@ import {
   resolveBrowserGeo,
   resolveGeo,
   sanitizeMetadata,
+  type ResolvedGeo,
   type TrackPayload
 } from "@/lib/analytics";
 import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabase";
 
 export const runtime = "nodejs";
+
+type BrowserGeoRow = {
+  country_code: string | null;
+  country_name: string | null;
+  region_code: string | null;
+  region_name: string | null;
+  city: string | null;
+  timezone: string | null;
+  metadata: Record<string, unknown> | null;
+};
+
+function rowToBrowserGeo(row: BrowserGeoRow): ResolvedGeo | null {
+  const source = row.metadata?.geo_source;
+
+  if (source !== "browser_ipapi") return null;
+  if (!row.country_code && !row.country_name && !row.region_name && !row.city) return null;
+
+  return {
+    country_code: row.country_code,
+    country_name: row.country_name,
+    region_code: row.region_code,
+    region_name: row.region_name,
+    city: row.city,
+    timezone: row.timezone,
+    source: "browser_ipapi"
+  };
+}
+
+async function findBrowserGeoByColumn(
+  supabase: SupabaseClient,
+  column: "session_id" | "visitor_id",
+  value?: string | null
+): Promise<ResolvedGeo | null> {
+  if (!value) return null;
+
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  const { data } = await supabase
+    .from("analytics_events")
+    .select("country_code, country_name, region_code, region_name, city, timezone, metadata")
+    .eq("event_type", "consent_update")
+    .eq(column, value)
+    .gte("created_at", since)
+    .order("created_at", { ascending: false })
+    .limit(10);
+
+  const rows = (data || []) as BrowserGeoRow[];
+  for (const row of rows) {
+    const geo = rowToBrowserGeo(row);
+    if (geo) return geo;
+  }
+
+  return null;
+}
+
+async function findReusableBrowserGeo(
+  supabase: SupabaseClient,
+  payload: TrackPayload
+): Promise<ResolvedGeo | null> {
+  return (
+    (await findBrowserGeoByColumn(supabase, "session_id", payload.sessionId)) ||
+    (await findBrowserGeoByColumn(supabase, "visitor_id", payload.visitorId))
+  );
+}
 
 export async function POST(request: NextRequest) {
   let payload: TrackPayload;
@@ -66,7 +131,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
-  const resolvedGeo = resolveBrowserGeo(payload.metadata) || (await resolveGeo(request, clientIp));
+  const browserGeo = resolveBrowserGeo(payload.metadata);
+  const reusableGeo =
+    !browserGeo && eventType === "page_view"
+      ? await findReusableBrowserGeo(supabase, payload)
+      : null;
+  const resolvedGeo = browserGeo || reusableGeo || (await resolveGeo(request, clientIp));
   const { source: geoSource, ...geo } = resolvedGeo;
   const metadata = {
     ...sanitizeMetadata(payload.metadata),
@@ -100,6 +170,7 @@ export async function POST(request: NextRequest) {
     await supabase
       .from("analytics_events")
       .update({
+        consent_status: payload.consent || "accepted",
         ...geo
       })
       .eq("event_type", "page_view")

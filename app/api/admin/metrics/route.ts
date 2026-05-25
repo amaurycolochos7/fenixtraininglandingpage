@@ -35,6 +35,56 @@ async function fetchEvents(days: number) {
   return rows;
 }
 
+type PreferredGeo = Pick<
+  AnalyticsEventRow,
+  "country_code" | "country_name" | "region_code" | "region_name" | "city" | "timezone"
+>;
+
+type PreferredGeoMaps = {
+  bySession: Map<string, PreferredGeo>;
+  byVisitor: Map<string, PreferredGeo>;
+};
+
+function hasBrowserGeo(event: AnalyticsEventRow) {
+  return event.metadata?.geo_source === "browser_ipapi";
+}
+
+function geoFromEvent(event: AnalyticsEventRow): PreferredGeo | null {
+  if (!hasBrowserGeo(event)) return null;
+  if (!event.country_name && !event.region_name && !event.city) return null;
+
+  return {
+    country_code: event.country_code,
+    country_name: event.country_name,
+    region_code: event.region_code,
+    region_name: event.region_name,
+    city: event.city,
+    timezone: event.timezone
+  };
+}
+
+function buildPreferredGeoMaps(events: AnalyticsEventRow[]): PreferredGeoMaps {
+  const bySession = new Map<string, PreferredGeo>();
+  const byVisitor = new Map<string, PreferredGeo>();
+
+  for (const event of events) {
+    const geo = geoFromEvent(event);
+    if (!geo) continue;
+    if (event.session_id) bySession.set(event.session_id, geo);
+    if (event.visitor_id) byVisitor.set(event.visitor_id, geo);
+  }
+
+  return { bySession, byVisitor };
+}
+
+function withPreferredGeo(event: AnalyticsEventRow, maps: PreferredGeoMaps): AnalyticsEventRow {
+  const geo =
+    (event.session_id && maps.bySession.get(event.session_id)) ||
+    (event.visitor_id && maps.byVisitor.get(event.visitor_id));
+
+  return geo ? { ...event, ...geo } : event;
+}
+
 export async function GET(request: NextRequest) {
   if (!isAdminRequest(request)) {
     return NextResponse.json({ ok: false, error: "No autorizado" }, { status: 401 });
@@ -64,7 +114,10 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const days = Math.min(Math.max(Number(url.searchParams.get("days") || 30), 7), 90);
   const events = await fetchEvents(days);
-  const pageViews = events.filter((event) => event.event_type === "page_view");
+  const preferredGeoMaps = buildPreferredGeoMaps(events);
+  const pageViews = events
+    .filter((event) => event.event_type === "page_view")
+    .map((event) => withPreferredGeo(event, preferredGeoMaps));
   const contacts = events.filter((event) => event.event_type === "contact_click");
   const visitors = new Set(pageViews.map((event) => event.visitor_id || event.fingerprint_key));
   const sessions = new Set(pageViews.map((event) => event.session_id || event.fingerprint_key));

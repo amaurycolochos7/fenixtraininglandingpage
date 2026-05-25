@@ -46,8 +46,8 @@ type GeoFields = {
   timezone: string | null;
 };
 
-type ResolvedGeo = GeoFields & {
-  source: "vercel" | "ipapi" | "ipwhois" | "browser_ipapi";
+export type ResolvedGeo = GeoFields & {
+  source: "vercel" | "ipapi" | "ipwhois" | "browser_ipapi" | "ip_conflict";
 };
 
 type IpApiResponse = {
@@ -144,6 +144,42 @@ function displayCountry(code?: string | null, fallback?: string | null) {
 function displayRegion(countryCode?: string | null, regionCode?: string | null, fallback?: string | null) {
   const known = regionName(countryCode, regionCode);
   return known === "Desconocido" || known === regionCode?.toUpperCase() ? fallback || known : known;
+}
+
+function sameCode(left?: string | null, right?: string | null) {
+  if (!left || !right) return false;
+  return left.trim().toUpperCase() === right.trim().toUpperCase();
+}
+
+function regionsDisagree(left: GeoFields, right: GeoFields) {
+  if (!sameCode(left.country_code, right.country_code)) return false;
+  if (left.region_code && right.region_code) return !sameCode(left.region_code, right.region_code);
+  if (left.region_name && right.region_name) {
+    return left.region_name.trim().toLowerCase() !== right.region_name.trim().toLowerCase();
+  }
+  return false;
+}
+
+function mergeGeo(primary: GeoFields, fallback: GeoFields): GeoFields {
+  return {
+    country_code: primary.country_code || fallback.country_code,
+    country_name: primary.country_name || fallback.country_name,
+    region_code: primary.region_code || fallback.region_code,
+    region_name: primary.region_name || fallback.region_name,
+    city: primary.city || fallback.city,
+    timezone: primary.timezone || fallback.timezone
+  };
+}
+
+function countryOnlyGeo(primary: GeoFields, fallback: GeoFields): GeoFields {
+  return {
+    country_code: primary.country_code || fallback.country_code,
+    country_name: primary.country_name || fallback.country_name,
+    region_code: null,
+    region_name: null,
+    city: null,
+    timezone: primary.timezone || fallback.timezone
+  };
 }
 
 export function readGeo(request: NextRequest): GeoFields {
@@ -270,33 +306,39 @@ async function lookupGeoFromIpWhoIs(ip: string): Promise<GeoFields | null> {
 
 export async function resolveGeo(request: NextRequest, ip: string): Promise<ResolvedGeo> {
   const vercelGeo = readGeo(request);
-  const ipapiGeo = await lookupGeoFromIp(ip);
+  const [ipapiGeo, externalGeo] = await Promise.all([
+    lookupGeoFromIp(ip),
+    lookupGeoFromIpWhoIs(ip)
+  ]);
 
-  if (ipapiGeo) {
+  if (ipapiGeo && externalGeo && regionsDisagree(ipapiGeo, externalGeo)) {
+    if (vercelGeo.region_code && sameCode(vercelGeo.region_code, ipapiGeo.region_code)) {
+      return { ...mergeGeo(ipapiGeo, vercelGeo), source: "ipapi" };
+    }
+
+    if (vercelGeo.region_code && sameCode(vercelGeo.region_code, externalGeo.region_code)) {
+      return { ...mergeGeo(externalGeo, vercelGeo), source: "ipwhois" };
+    }
+
     return {
-      country_code: ipapiGeo.country_code || vercelGeo.country_code,
-      country_name: ipapiGeo.country_name || vercelGeo.country_name,
-      region_code: ipapiGeo.region_code || vercelGeo.region_code,
-      region_name: ipapiGeo.region_name || vercelGeo.region_name,
-      city: ipapiGeo.city || vercelGeo.city,
-      timezone: ipapiGeo.timezone || vercelGeo.timezone,
-      source: "ipapi"
+      ...countryOnlyGeo(ipapiGeo, externalGeo),
+      source: "ip_conflict"
     };
   }
 
-  const externalGeo = await lookupGeoFromIpWhoIs(ip);
+  if (ipapiGeo) {
+    return {
+      ...mergeGeo(ipapiGeo, vercelGeo),
+      source: "ipapi"
+    };
+  }
 
   if (!externalGeo) {
     return { ...vercelGeo, source: "vercel" };
   }
 
   return {
-    country_code: externalGeo.country_code || vercelGeo.country_code,
-    country_name: externalGeo.country_name || vercelGeo.country_name,
-    region_code: externalGeo.region_code || vercelGeo.region_code,
-    region_name: externalGeo.region_name || vercelGeo.region_name,
-    city: externalGeo.city || vercelGeo.city,
-    timezone: externalGeo.timezone || vercelGeo.timezone,
+    ...mergeGeo(externalGeo, vercelGeo),
     source: "ipwhois"
   };
 }
