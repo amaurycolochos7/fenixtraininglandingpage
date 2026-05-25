@@ -47,7 +47,19 @@ type GeoFields = {
 };
 
 type ResolvedGeo = GeoFields & {
-  source: "vercel" | "ipwhois" | "browser";
+  source: "vercel" | "ipapi" | "ipwhois";
+};
+
+type IpApiResponse = {
+  ip?: string;
+  country_code?: string;
+  country_name?: string;
+  region_code?: string;
+  region?: string;
+  city?: string;
+  timezone?: string;
+  error?: boolean;
+  reason?: string;
 };
 
 type IpWhoIsResponse = {
@@ -59,28 +71,6 @@ type IpWhoIsResponse = {
   city?: string;
   timezone?: {
     id?: string;
-  };
-};
-
-type PreciseLocationPayload = {
-  latitude?: unknown;
-  longitude?: unknown;
-  accuracy?: unknown;
-};
-
-type NominatimResponse = {
-  address?: {
-    country?: string;
-    country_code?: string;
-    state?: string;
-    region?: string;
-    province?: string;
-    county?: string;
-    city?: string;
-    town?: string;
-    village?: string;
-    municipality?: string;
-    suburb?: string;
   };
 };
 
@@ -152,7 +142,51 @@ async function lookupGeoFromIp(ip: string): Promise<GeoFields | null> {
   if (!isLikelyPublicIp(ip)) return null;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 1200);
+  const timeout = setTimeout(() => controller.abort(), 1800);
+
+  try {
+    const response = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`, {
+      cache: "no-store",
+      headers: {
+        "user-agent": "FenixFightSystemAnalytics/1.0"
+      },
+      signal: controller.signal
+    });
+
+    if (!response.ok) return null;
+
+    const data = (await response.json()) as IpApiResponse;
+    if (data.error || !data.country_code) return null;
+
+    const countryCode = data.country_code.toUpperCase();
+    const regionCode = data.region_code || null;
+    const region = data.region || null;
+
+    return {
+      country_code: countryCode,
+      country_name: data.country_name || countryName(countryCode),
+      region_code: regionCode,
+      region_name: region || regionName(countryCode, regionCode),
+      city: data.city || null,
+      timezone: data.timezone || null
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export function sanitizeMetadata(metadata?: Record<string, unknown>) {
+  const { precise_location: _preciseLocation, ...safeMetadata } = metadata || {};
+  return safeMetadata;
+}
+
+async function lookupGeoFromIpWhoIs(ip: string): Promise<GeoFields | null> {
+  if (!isLikelyPublicIp(ip)) return null;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1400);
 
   try {
     const response = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
@@ -184,115 +218,23 @@ async function lookupGeoFromIp(ip: string): Promise<GeoFields | null> {
   }
 }
 
-function readPreciseLocation(metadata?: Record<string, unknown>): {
-  latitude: number;
-  longitude: number;
-  accuracy: number | null;
-} | null {
-  const precise = metadata?.precise_location as PreciseLocationPayload | undefined;
-  const latitude = Number(precise?.latitude);
-  const longitude = Number(precise?.longitude);
-  const accuracy = Number(precise?.accuracy);
-
-  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
-  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) return null;
-
-  return {
-    latitude,
-    longitude,
-    accuracy: Number.isFinite(accuracy) && accuracy >= 0 ? Math.round(accuracy) : null
-  };
-}
-
-export function sanitizeMetadata(metadata?: Record<string, unknown>) {
-  const preciseLocation = readPreciseLocation(metadata);
-  const { precise_location: _preciseLocation, ...safeMetadata } = metadata || {};
-
-  if (!preciseLocation) return safeMetadata;
-
-  return {
-    ...safeMetadata,
-    location_precision: "browser",
-    location_accuracy_m: preciseLocation.accuracy
-  };
-}
-
-async function reverseLookupGeoFromCoordinates(
-  latitude: number,
-  longitude: number
-): Promise<GeoFields | null> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 1800);
-  const params = new URLSearchParams({
-    format: "jsonv2",
-    lat: String(latitude),
-    lon: String(longitude),
-    zoom: "10",
-    addressdetails: "1",
-    "accept-language": "es"
-  });
-
-  try {
-    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?${params}`, {
-      cache: "no-store",
-      headers: {
-        "user-agent": "FenixFightSystemAnalytics/1.0"
-      },
-      signal: controller.signal
-    });
-
-    if (!response.ok) return null;
-
-    const data = (await response.json()) as NominatimResponse;
-    const address = data.address;
-    if (!address) return null;
-
-    const countryCode = address.country_code?.toUpperCase() || null;
-    const region =
-      address.state || address.region || address.province || address.county || null;
-    const city =
-      address.city ||
-      address.town ||
-      address.village ||
-      address.municipality ||
-      address.suburb ||
-      address.county ||
-      null;
-
-    if (!countryCode && !region && !city) return null;
-
-    return {
-      country_code: countryCode,
-      country_name: address.country || countryName(countryCode),
-      region_code: null,
-      region_name: region || regionName(countryCode, null),
-      city,
-      timezone: null
-    };
-  } catch {
-    return null;
-  } finally {
-    clearTimeout(timeout);
-  }
-}
-
-export async function resolvePreciseGeo(
-  metadata?: Record<string, unknown>
-): Promise<ResolvedGeo | null> {
-  const preciseLocation = readPreciseLocation(metadata);
-  if (!preciseLocation) return null;
-
-  const geo = await reverseLookupGeoFromCoordinates(
-    preciseLocation.latitude,
-    preciseLocation.longitude
-  );
-
-  return geo ? { ...geo, source: "browser" } : null;
-}
-
 export async function resolveGeo(request: NextRequest, ip: string): Promise<ResolvedGeo> {
   const vercelGeo = readGeo(request);
-  const externalGeo = await lookupGeoFromIp(ip);
+  const ipapiGeo = await lookupGeoFromIp(ip);
+
+  if (ipapiGeo) {
+    return {
+      country_code: ipapiGeo.country_code || vercelGeo.country_code,
+      country_name: ipapiGeo.country_name || vercelGeo.country_name,
+      region_code: ipapiGeo.region_code || vercelGeo.region_code,
+      region_name: ipapiGeo.region_name || vercelGeo.region_name,
+      city: ipapiGeo.city || vercelGeo.city,
+      timezone: ipapiGeo.timezone || vercelGeo.timezone,
+      source: "ipapi"
+    };
+  }
+
+  const externalGeo = await lookupGeoFromIpWhoIs(ip);
 
   if (!externalGeo) {
     return { ...vercelGeo, source: "vercel" };

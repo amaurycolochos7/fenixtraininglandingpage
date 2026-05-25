@@ -9,7 +9,6 @@ type ConsentStatus = "accepted" | "rejected" | "unset";
 const consentKey = "ffs_cookie_consent";
 const visitorCookie = "ffs_visitor_id";
 const sessionKey = "ffs_session_id";
-const geoSentKey = "ffs_geo_sent";
 
 function createId(prefix: string) {
   const random =
@@ -102,52 +101,9 @@ export function AnalyticsTracker() {
     [consent, isAdminRoute, isReady, path]
   );
 
-  const sendPreciseLocation = useCallback(
-    (consentOverride?: ConsentStatus, force = false) => {
-      if (!isReady || isAdminRoute || !("geolocation" in navigator)) return;
-      if (!force && sessionStorage.getItem(geoSentKey) === "true") return;
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          sessionStorage.setItem(geoSentKey, "true");
-          sendEvent(
-            "consent_update",
-            {
-              status: consentOverride || consent,
-              precise_location: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy
-              }
-            },
-            consentOverride
-          );
-        },
-        () => undefined,
-        {
-          enableHighAccuracy: true,
-          maximumAge: 300000,
-          timeout: 10000
-        }
-      );
-    },
-    [consent, isAdminRoute, isReady, sendEvent]
-  );
-
   useEffect(() => {
     sendEvent("page_view");
   }, [sendEvent]);
-
-  useEffect(() => {
-    if (!isReady || consent !== "accepted" || isAdminRoute || !navigator.permissions) return;
-
-    navigator.permissions
-      .query({ name: "geolocation" as PermissionName })
-      .then((permission) => {
-        if (permission.state === "granted") sendPreciseLocation("accepted");
-      })
-      .catch(() => undefined);
-  }, [consent, isAdminRoute, isReady, sendPreciseLocation]);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -189,7 +145,6 @@ export function AnalyticsTracker() {
 
     if (nextConsent === "accepted") {
       getVisitorId("accepted");
-      sendPreciseLocation("accepted", true);
     } else {
       removeCookie(visitorCookie);
     }
@@ -215,10 +170,10 @@ export function AnalyticsTracker() {
         <ShieldCheck size={22} />
       </div>
       <div>
-        <strong>Analítica propia y privada</strong>
+        <strong>Analítica responsable</strong>
         <p>
-          Usamos cookies propias para contar visitantes únicos y pedir ubicación precisa opcional.
-          Si rechazas, seguiremos contando visitas generales sin cookie persistente.
+          Al aceptar, nos ayudas a medir visitas reales, páginas consultadas, origen aproximado por
+          IP y efectividad de campañas. No guardamos tu IP cruda ni vendemos tus datos.
         </p>
       </div>
       <div className="cookie-actions">

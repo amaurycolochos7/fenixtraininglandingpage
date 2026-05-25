@@ -416,8 +416,8 @@ export function AdminDashboard() {
             <span className="eyebrow">Métricas reales</span>
             <h1>Panel de visualizaciones</h1>
             <p>
-              Conteo server-side con cookies propias, deduplicación corta, ubicación precisa con
-              permiso del navegador y respaldo por IP.
+              Conteo server-side con cookies propias, deduplicación corta y ubicación aproximada
+              por IP con proveedor externo.
             </p>
           </div>
           <div className="admin-actions">
@@ -568,9 +568,8 @@ export function AdminDashboard() {
         </section>
 
         <p className="admin-note">
-          Nota: cuando el visitante acepta cookies y permite ubicación, el panel usa estado/ciudad
-          del navegador. Si no da permiso, se muestra la estimación por IP, que puede caer en Ciudad
-          de México por VPN, datos móviles o proveedor.
+          Nota: la ubicación se estima automáticamente por IP. País suele ser más confiable que
+          estado/ciudad; VPN, datos móviles y proveedores pueden mover la ubicación reportada.
         </p>
       </section>
 
