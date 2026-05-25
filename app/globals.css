@@ -21,6 +21,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -32,6 +33,7 @@ body {
   color: var(--text);
   font-family: "Source Sans 3", sans-serif;
   min-width: 320px;
+  overflow-x: hidden;
 }
 
 a {
@@ -738,9 +740,12 @@ p {
 }
 
 .admin-shell {
+  width: 100%;
+  max-width: 100vw;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 270px 1fr;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 100% 0, rgba(244, 184, 91, 0.08), transparent 360px),
     var(--bg);
@@ -809,6 +814,7 @@ p {
 }
 
 .admin-content {
+  min-width: 0;
   padding: 34px;
 }
 
@@ -1001,6 +1007,7 @@ p {
 }
 
 .bucket-row div {
+  min-width: 0;
   display: flex;
   justify-content: space-between;
   gap: 14px;
@@ -1041,14 +1048,18 @@ p {
   inset: 0;
   display: flex;
   justify-content: flex-end;
+  overflow: hidden;
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: blur(10px);
 }
 
 .detail-modal {
   width: min(980px, 100%);
-  height: 100vh;
+  max-width: 100vw;
+  height: 100dvh;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
   padding: 30px;
   border-left: 1px solid rgba(255, 255, 255, 0.12);
   background:
@@ -1075,6 +1086,7 @@ p {
 }
 
 .detail-grid {
+  min-width: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
@@ -1082,6 +1094,7 @@ p {
 }
 
 .detail-bucket {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1130,6 +1143,8 @@ p {
 }
 
 .detail-table-card {
+  min-width: 0;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 18px;
@@ -1147,6 +1162,7 @@ p {
 }
 
 .detail-visit {
+  min-width: 0;
   display: grid;
   grid-template-columns: 1fr 1.2fr 0.9fr;
   gap: 14px;
@@ -1159,7 +1175,9 @@ p {
 .detail-visit strong,
 .detail-visit b,
 .detail-visit span {
+  min-width: 0;
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .detail-visit strong,
@@ -1183,6 +1201,7 @@ p {
 }
 
 .recent-row {
+  min-width: 0;
   display: grid;
   grid-template-columns: 1.1fr 1fr 1fr auto;
   align-items: center;
@@ -1196,7 +1215,9 @@ p {
 .recent-row strong,
 .recent-row b,
 .recent-row span {
+  min-width: 0;
   display: block;
+  overflow-wrap: anywhere;
 }
 
 .recent-row strong,
@@ -1452,7 +1473,8 @@ p {
   }
 
   .detail-modal {
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
     padding: 22px 14px;
     border-left: 0;
   }
