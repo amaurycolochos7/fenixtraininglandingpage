@@ -55,6 +55,21 @@ type DetailData = {
   buckets: DetailBucket[];
   recent: DetailVisit[];
 };
+type RecentVisit = {
+  id: string;
+  date: string;
+  created_at: string;
+  path: string;
+  title: string | null;
+  country: string;
+  region: string;
+  city: string;
+  source: string;
+  device: string;
+  browser: string;
+  os: string;
+  consent: string;
+};
 type Metrics = {
   configured: boolean;
   message?: string;
@@ -72,6 +87,7 @@ type Metrics = {
   pages: Bucket[];
   sources: Bucket[];
   devices: Bucket[];
+  recent: RecentVisit[];
 };
 
 const ranges = [
@@ -149,6 +165,60 @@ function BucketList({
         ))}
       </div>
     </article>
+  );
+}
+
+function RecentVisitsList({
+  visits,
+  onOpen
+}: {
+  visits: RecentVisit[];
+  onOpen: (dimension: DetailDimension, focusLabel?: string) => void;
+}) {
+  return (
+    <section className="panel-card recent-panel">
+      <div className="panel-title-row">
+        <div>
+          <h2>Actividad reciente</h2>
+          <p>Lista simple de quiénes han visto el sitio, de dónde vienen y qué página abrieron.</p>
+        </div>
+        <button className="secondary-button" onClick={() => onOpen("country")}>
+          Ver países
+          <ArrowUpRight size={16} />
+        </button>
+      </div>
+
+      <div className="recent-list">
+        {visits.length === 0 && <p className="muted">Todavía no hay visitas en este periodo.</p>}
+        {visits.map((visit) => (
+          <article className="recent-row" key={visit.id}>
+            <div className="recent-main">
+              <strong>
+                {visit.country} · {visit.region}
+              </strong>
+              <span>
+                {visit.city} · {visit.date}
+              </span>
+            </div>
+            <div>
+              <b>{visit.path}</b>
+              <span>{visit.title || "Página sin título"}</span>
+            </div>
+            <div>
+              <b>{visit.source}</b>
+              <span>
+                {visit.device} · {visit.browser} · {visit.os}
+              </span>
+            </div>
+            <div className="recent-actions">
+              <button onClick={() => onOpen("country", visit.country)}>País</button>
+              <button onClick={() => onOpen("region", visit.region)}>Estado</button>
+              <button onClick={() => onOpen("page", visit.path)}>Página</button>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -461,6 +531,8 @@ export function AdminDashboard() {
             )}
           </div>
         </section>
+
+        <RecentVisitsList visits={metrics?.recent || []} onOpen={openDetail} />
 
         <section className="admin-panels">
           <BucketList

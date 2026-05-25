@@ -78,6 +78,24 @@ export async function GET(request: NextRequest) {
   const series = emptySeries(days);
   const seriesIndex = new Map(series.map((item) => [item.date, item]));
   const visitorsByDay = new Map<string, Set<string>>();
+  const recent = [...pageViews]
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 30)
+    .map((event) => ({
+      id: event.id,
+      date: localDateKey(event.created_at),
+      created_at: event.created_at,
+      path: event.path,
+      title: event.title,
+      country: event.country_name || "Desconocido",
+      region: event.region_name || "Desconocido",
+      city: event.city || "Desconocido",
+      source: refSource(event.referrer),
+      device: event.device_type || "Desconocido",
+      browser: event.browser || "Otro",
+      os: event.os || "Otro",
+      consent: event.consent_status
+    }));
 
   for (const event of pageViews) {
     increment(byCountry, event.country_name);
@@ -121,6 +139,7 @@ export async function GET(request: NextRequest) {
     regions: top(byRegion),
     pages: top(byPage),
     sources: top(bySource),
-    devices: top(byDevice)
+    devices: top(byDevice),
+    recent
   });
 }

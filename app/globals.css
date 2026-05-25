@@ -1172,6 +1172,69 @@ p {
   font-size: 14px;
 }
 
+.recent-panel {
+  margin-top: 14px;
+}
+
+.recent-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.recent-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.recent-row strong,
+.recent-row b,
+.recent-row span {
+  display: block;
+}
+
+.recent-row strong,
+.recent-row b {
+  color: #f0f0f0;
+}
+
+.recent-row span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.recent-main strong {
+  color: var(--brass);
+}
+
+.recent-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.recent-actions button {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ededed;
+  min-height: 34px;
+  padding: 0 10px;
+  font-weight: 900;
+}
+
+.recent-actions button:hover {
+  border-color: rgba(244, 184, 91, 0.4);
+  color: var(--brass);
+}
+
 @media (max-width: 1050px) {
   .desktop-nav,
   .nav-cta {
@@ -1220,7 +1283,8 @@ p {
   }
 
   .detail-grid,
-  .detail-visit {
+  .detail-visit,
+  .recent-row {
     grid-template-columns: 1fr;
   }
 
@@ -1348,12 +1412,49 @@ p {
     padding: 20px 14px 34px;
   }
 
+  .admin-sidebar {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .admin-brand img {
+    width: 44px;
+  }
+
+  .admin-sidebar nav {
+    width: 100%;
+    margin-left: 0;
+    gap: 6px;
+  }
+
+  .admin-sidebar nav a,
+  .sidebar-logout {
+    width: auto;
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
   .admin-actions {
     justify-content: flex-start;
   }
 
+  .admin-topbar h1 {
+    font-size: 42px;
+  }
+
+  .panel-title-row {
+    display: grid;
+  }
+
+  .recent-actions {
+    justify-content: flex-start;
+  }
+
   .detail-modal {
+    width: 100%;
     padding: 22px 14px;
+    border-left: 0;
   }
 
   .detail-header,
@@ -1373,5 +1474,13 @@ p {
 
   .range-control button {
     flex: 1;
+  }
+
+  .chart-wrap {
+    height: 230px;
+  }
+
+  .recent-row {
+    padding: 12px;
   }
 }
