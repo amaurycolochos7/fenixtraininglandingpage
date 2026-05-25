@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { type ComponentType, useEffect, useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -11,6 +11,7 @@ import {
   YAxis
 } from "recharts";
 import {
+  ArrowUpRight,
   Download,
   Eye,
   Globe2,
@@ -18,11 +19,42 @@ import {
   MousePointerClick,
   RefreshCw,
   ShieldCheck,
-  Users
+  Users,
+  X
 } from "lucide-react";
 
 type Bucket = { label: string; value: number };
 type SeriesItem = { date: string; views: number; visitors: number; contacts: number };
+type DetailDimension = "country" | "region" | "page" | "source" | "device";
+type DetailBucket = Bucket & {
+  percent: number;
+  visitors: number;
+  sessions: number;
+};
+type DetailVisit = {
+  id: string;
+  date: string;
+  created_at: string;
+  bucket_label: string;
+  path: string;
+  title: string | null;
+  country: string;
+  region: string;
+  city: string;
+  source: string;
+  device: string;
+  browser: string;
+  os: string;
+  consent: string;
+};
+type DetailData = {
+  title: string;
+  dimension: DetailDimension;
+  days: number;
+  total: number;
+  buckets: DetailBucket[];
+  recent: DetailVisit[];
+};
 type Metrics = {
   configured: boolean;
   message?: string;
@@ -58,7 +90,7 @@ function MetricCard({
   value,
   hint
 }: {
-  icon: typeof Eye;
+  icon: ComponentType<{ size?: number }>;
   label: string;
   value: string | number;
   hint: string;
@@ -75,25 +107,155 @@ function MetricCard({
   );
 }
 
-function BucketList({ title, items }: { title: string; items: Bucket[] }) {
+function BucketList({
+  title,
+  items,
+  dimension,
+  onOpen
+}: {
+  title: string;
+  items: Bucket[];
+  dimension: DetailDimension;
+  onOpen: (dimension: DetailDimension, focusLabel?: string) => void;
+}) {
   const max = Math.max(...items.map((item) => item.value), 1);
 
   return (
-    <article className="panel-card">
-      <h3>{title}</h3>
+    <article className="panel-card clickable-panel" onClick={() => onOpen(dimension)}>
+      <div className="bucket-heading">
+        <h3>{title}</h3>
+        <span>
+          Ver detalle
+          <ArrowUpRight size={16} />
+        </span>
+      </div>
       <div className="bucket-list">
         {items.length === 0 && <p className="muted">Sin datos todavía.</p>}
         {items.map((item) => (
-          <div className="bucket-row" key={item.label}>
+          <button
+            className="bucket-row bucket-row-button"
+            key={item.label}
+            onClick={(event) => {
+              event.stopPropagation();
+              onOpen(dimension, item.label);
+            }}
+          >
             <div>
               <span>{item.label}</span>
               <b>{numberFormat(item.value)}</b>
             </div>
             <i style={{ width: `${Math.max((item.value / max) * 100, 8)}%` }} />
-          </div>
+          </button>
         ))}
       </div>
     </article>
+  );
+}
+
+function DetailModal({
+  data,
+  loading,
+  selectedLabel,
+  onSelectLabel,
+  onClose
+}: {
+  data: DetailData | null;
+  loading: boolean;
+  selectedLabel: string | null;
+  onSelectLabel: (label: string | null) => void;
+  onClose: () => void;
+}) {
+  const filteredRecent =
+    selectedLabel && data
+      ? data.recent.filter((visit) => visit.bucket_label === selectedLabel)
+      : data?.recent || [];
+
+  return (
+    <div className="detail-backdrop" role="dialog" aria-modal="true">
+      <section className="detail-modal">
+        <header className="detail-header">
+          <div>
+            <span className="eyebrow">Detalle real</span>
+            <h2>{data?.title || "Detalle"}</h2>
+            <p>
+              {loading
+                ? "Cargando datos..."
+                : `${numberFormat(data?.total || 0)} visualizaciones en el periodo seleccionado.`}
+            </p>
+          </div>
+          <button className="icon-button" onClick={onClose} aria-label="Cerrar detalle">
+            <X size={20} />
+          </button>
+        </header>
+
+        {loading && <div className="status-banner">Consultando Supabase...</div>}
+
+        {!loading && data && (
+          <>
+            <div className="detail-grid">
+              {data.buckets.length === 0 && <p className="muted">Sin datos para este periodo.</p>}
+              {data.buckets.map((bucket) => (
+                <button
+                  key={bucket.label}
+                  className={`detail-bucket ${selectedLabel === bucket.label ? "active" : ""}`}
+                  onClick={() =>
+                    onSelectLabel(selectedLabel === bucket.label ? null : bucket.label)
+                  }
+                >
+                  <div>
+                    <strong>{bucket.label}</strong>
+                    <span>{bucket.percent}% del total</span>
+                  </div>
+                  <div>
+                    <b>{numberFormat(bucket.value)}</b>
+                    <small>
+                      {numberFormat(bucket.visitors)} visitantes / {numberFormat(bucket.sessions)}{" "}
+                      sesiones
+                    </small>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="detail-table-card">
+              <div className="detail-subhead">
+                <h3>{selectedLabel ? `Visitas de ${selectedLabel}` : "Visitas recientes"}</h3>
+                {selectedLabel && (
+                  <button className="ghost-button" onClick={() => onSelectLabel(null)}>
+                    Ver todo
+                  </button>
+                )}
+              </div>
+              <div className="detail-table">
+                {filteredRecent.length === 0 && <p className="muted">Sin visitas recientes.</p>}
+                {filteredRecent.map((visit) => (
+                  <article className="detail-visit" key={visit.id}>
+                    <div>
+                      <strong>{visit.bucket_label}</strong>
+                      <span>
+                        {visit.date} · {visit.path}
+                      </span>
+                    </div>
+                    <div>
+                      <b>
+                        {visit.country} / {visit.region}
+                      </b>
+                      <span>
+                        {visit.city} · {visit.device} · {visit.browser} · {visit.os}
+                      </span>
+                    </div>
+                    <div>
+                      <b>{visit.source}</b>
+                      <span>Cookies: {visit.consent}</span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
+      </section>
+    </div>
   );
 }
 
@@ -102,6 +264,10 @@ export function AdminDashboard() {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailData, setDetailData] = useState<DetailData | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [activeDetail, setActiveDetail] = useState<DetailDimension | null>(null);
+  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
 
   async function loadMetrics(nextDays = days) {
     setLoading(true);
@@ -116,6 +282,26 @@ export function AdminDashboard() {
       setError(loadError instanceof Error ? loadError.message : "Error desconocido.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function openDetail(dimension: DetailDimension, focusLabel?: string) {
+    setActiveDetail(dimension);
+    setSelectedLabel(focusLabel || null);
+    setDetailLoading(true);
+
+    try {
+      const response = await fetch(`/api/admin/breakdown?dimension=${dimension}&days=${days}`, {
+        cache: "no-store"
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "No se pudo cargar el detalle.");
+      setDetailData(data);
+    } catch (detailError) {
+      setError(detailError instanceof Error ? detailError.message : "Error desconocido.");
+      setActiveDetail(null);
+    } finally {
+      setDetailLoading(false);
     }
   }
 
@@ -277,11 +463,36 @@ export function AdminDashboard() {
         </section>
 
         <section className="admin-panels">
-          <BucketList title="Países" items={metrics?.countries || []} />
-          <BucketList title="Estados" items={metrics?.regions || []} />
-          <BucketList title="Páginas" items={metrics?.pages || []} />
-          <BucketList title="Fuentes" items={metrics?.sources || []} />
-          <BucketList title="Dispositivos" items={metrics?.devices || []} />
+          <BucketList
+            title="Países"
+            items={metrics?.countries || []}
+            dimension="country"
+            onOpen={openDetail}
+          />
+          <BucketList
+            title="Estados"
+            items={metrics?.regions || []}
+            dimension="region"
+            onOpen={openDetail}
+          />
+          <BucketList
+            title="Páginas"
+            items={metrics?.pages || []}
+            dimension="page"
+            onOpen={openDetail}
+          />
+          <BucketList
+            title="Fuentes"
+            items={metrics?.sources || []}
+            dimension="source"
+            onOpen={openDetail}
+          />
+          <BucketList
+            title="Dispositivos"
+            items={metrics?.devices || []}
+            dimension="device"
+            onOpen={openDetail}
+          />
         </section>
 
         <p className="admin-note">
@@ -289,6 +500,20 @@ export function AdminDashboard() {
           datos móviles y proveedores pueden mover la ubicación reportada.
         </p>
       </section>
+
+      {activeDetail && (
+        <DetailModal
+          data={detailData}
+          loading={detailLoading}
+          selectedLabel={selectedLabel}
+          onSelectLabel={setSelectedLabel}
+          onClose={() => {
+            setActiveDetail(null);
+            setDetailData(null);
+            setSelectedLabel(null);
+          }}
+        />
+      )}
     </main>
   );
 }
