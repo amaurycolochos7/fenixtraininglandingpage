@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fenix Fight System | Muay Thai & Disciplina</title>
+    <!-- Preload LCP Image -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1599058917232-d750c185967c?auto=format&fit=crop&q=80&w=1920">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #f5f5f5; }
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+        .text-gradient {
+            background: linear-gradient(to right, #D31118, #FF8C00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-fenix { background-color: #D31118; }
+        .border-fenix { border-color: #D31118; }
+        .hover-fenix:hover { background-color: #b00e14; }
+        .card-dark { background-color: #1a1a1a; border: 1px solid #333; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Navegación -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#inicio" class="flex items-center gap-3 hover:opacity-80 transition cursor-pointer">
+                <div class="flex items-center justify-center mix-blend-screen bg-black" style="mix-blend-mode: screen;">
+                    <img src="logo.png" alt="Logo Fenix" fetchpriority="high" class="h-16 w-auto md:h-20 object-contain drop-shadow-[0_0_15px_rgba(211,17,24,0.4)]" style="filter: contrast(1.2);">
+                </div>
+                <span class="text-xl font-bold tracking-tighter hidden sm:inline">FENIX <span class="text-red-600">FIGHT SYSTEM</span></span>
+                <span class="text-xl font-bold tracking-tighter sm:hidden">FENIX</span>
+            </a>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex gap-5 font-medium text-xs uppercase tracking-widest items-center">
+                <a href="#inicio" class="hover:text-red-500 transition">Inicio</a>
+                <a href="#filosofia" class="hover:text-red-500 transition">Filosofía</a>
+                <a href="#coach" class="hover:text-red-500 transition">Coach</a>
+                <a href="#certificaciones" class="hover:text-red-500 transition">Galería</a>
+                <a href="videos.html" class="hover:text-red-500 transition">Videos</a>
+                <a href="#disciplinas" class="hover:text-red-500 transition">Disciplinas</a>
+                <a href="#horarios" class="hover:text-red-500 transition">Horarios</a>
+                <a href="#resultados" class="hover:text-red-500 transition">Resultados</a>
+                <a href="https://wa.me/528671643047" class="bg-fenix px-4 py-2 rounded-full text-xs font-bold hover-fenix transition whitespace-nowrap ml-2">¡ENTRENA YA!</a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" class="lg:hidden text-white hover:text-red-500 focus:outline-none transition">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-black/95 backdrop-blur-md border-t border-white/10 absolute w-full left-0 top-full">
+            <div class="flex flex-col px-4 py-6 space-y-6 font-medium text-sm uppercase tracking-widest text-center shadow-2xl">
+                <a href="#inicio" class="hover:text-red-500 transition mobile-link block">Inicio</a>
+                <a href="#filosofia" class="hover:text-red-500 transition mobile-link block">Filosofía</a>
+                <a href="#coach" class="hover:text-red-500 transition mobile-link block">Head Coach</a>
+                <a href="#certificaciones" class="hover:text-red-500 transition mobile-link block">Certificaciones</a>
+                <a href="videos.html" class="hover:text-red-500 transition mobile-link block">Videos</a>
+                <a href="#disciplinas" class="hover:text-red-500 transition mobile-link block">Disciplinas</a>
+                <a href="#horarios" class="hover:text-red-500 transition mobile-link block">Horarios</a>
+                <a href="#resultados" class="hover:text-red-500 transition mobile-link block">Resultados</a>
+                <a href="https://wa.me/528671643047" class="mobile-link bg-fenix px-5 py-3 rounded-full text-sm font-bold hover-fenix transition mx-auto inline-block w-4/5">¡ENTRENA YA!</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1599058917232-d750c185967c?auto=format&fit=crop&q=80&w=1920" alt="Muay Thai Training" fetchpriority="high" class="w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-black/80"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-4xl pt-10">
+            <h2 class="text-red-600 font-bold tracking-[0.3em] mb-4 text-xs md:text-sm lg:text-base">NUEVO LAREDO, MÉXICO</h2>
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-bold leading-tight mb-6">FORJA TU <br class="block sm:hidden"><span class="text-gradient">ESPÍRITU</span></h1>
+            <p class="text-base sm:text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto px-2">
+                Artes Marciales, Salud y Disciplina. Somos el centro de entrenamiento líder en Muay Thai con certificación WBC.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="https://wa.me/528671643047" class="w-full sm:w-auto bg-fenix px-8 py-4 rounded-lg font-bold text-base sm:text-lg hover-fenix shadow-lg shadow-red-900/20 transition flex items-center justify-center gap-2">
+                    <i data-lucide="zap" class="w-5 h-5"></i> INICIA HOY MISMO
+                </a>
+                <a href="#disciplinas" class="w-full sm:w-auto border border-white/20 px-8 py-4 rounded-lg font-bold text-base sm:text-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
+                    VER PROGRAMAS
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filosofía -->
+    <section id="filosofia" class="py-24 px-4 max-w-7xl mx-auto bg-zinc-900/30 rounded-3xl mt-12 border border-white/5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6">NUESTRA <span class="text-red-600">FILOSOFÍA</span></h2>
+                <div class="w-20 h-1 bg-red-600 rounded-full mb-8"></div>
+                <div class="space-y-6 text-gray-300 text-lg">
+                    <p>
+                        <strong class="text-white">Público:</strong> Entrenamiento de alto rendimiento para hombres y programa exclusivo de combate para mujeres.
+                    </p>
+                    <p>
+                        <strong class="text-white">Código:</strong> Basado firmemente en el <span class="text-red-500 font-bold">Código Bushido</span> (Honor, Disciplina y Lealtad).
+                    </p>
+                    <p>
+                        <strong class="text-white">Misión:</strong> Ayudar a los hombres a recuperar su fuerza, control y salud a través de las artes marciales y la disciplina inquebrantable.
+                    </p>
+                </div>
+            </div>
+            <div class="relative h-64 md:h-full min-h-[300px] rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&q=80&w=800" alt="Bushido Code" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Head Coach -->
+    <section id="coach" class="py-24 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4">HEAD <span class="text-red-600">COACH</span></h2>
+            <div class="w-20 h-1 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="card-dark p-8 md:p-12 rounded-3xl flex flex-col md:flex-row gap-8 items-center border border-red-600/20 shadow-[0_0_30px_rgba(211,17,24,0.1)] relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-red-600/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+            
+            <div class="w-48 h-48 md:w-64 md:h-64 shrink-0 rounded-full overflow-hidden border-4 border-red-600 shadow-xl z-10 bg-zinc-900">
+                <img src="cliente.jpg" alt="Head Coach Gustavo" loading="lazy" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="z-10 text-center md:text-left">
+                <h3 class="text-3xl font-bold mb-2 uppercase">Gustavo Israel Cantú Ávalos</h3>
+                <p class="text-red-500 font-bold tracking-widest uppercase mb-6 text-sm">Oficial Técnico, Juez y Árbitro</p>
+                
+                <ul class="space-y-4 text-gray-300 text-left">
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="award" class="text-red-500 shrink-0 mt-1"></i>
+                        <span>Certificado internacionalmente por la <strong>WBC Muay Thai</strong> y la <strong>FAMM</strong>.</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i data-lucide="flame" class="text-red-500 shrink-0 mt-1"></i>
+                        <span>Creador de un <strong>Sistema de Transformación Real</strong>, basado en su propio cambio físico y mental comprobado.</span>
+                    </li>
+                </ul>
+                <div class="mt-8 flex justify-center md:justify-start">
+                    <a href="https://www.tiktok.com/@gustavoisraelcant?_r=1&_t=ZS-94tS5dgiOKw" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 border border-[#fe2c55]/30 hover:bg-[#fe2c55]/10 hover:border-[#fe2c55]/80 rounded-full text-white text-xs sm:text-sm font-bold uppercase tracking-widest transition-all duration-300 shadow-[0_4px_15px_rgba(254,44,85,0.15)] hover:shadow-[0_4px_25px_rgba(254,44,85,0.3)]">
+                        <svg class="w-5 h-5 fill-[#fe2c55]" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                        Seguir en TikTok
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apoyo Entrenador -->
+        <div class="mt-8 card-dark p-6 md:p-8 rounded-2xl flex flex-col sm:flex-row gap-6 items-center border border-white/10 hover:border-red-600/20 transition-all duration-500 relative overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-red-600/40 to-transparent"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="w-32 h-32 sm:w-40 sm:h-40 shrink-0 rounded-full overflow-hidden border-3 border-red-600/50 shadow-lg z-10 bg-zinc-900">
+                <img src="patricio.jpeg" alt="Patricio Cantú - Apoyo Entrenador" loading="lazy" class="w-full h-full object-cover object-top">
+            </div>
+            <div class="z-10 text-center sm:text-left">
+                <p class="text-red-500 font-bold tracking-widest uppercase mb-1 text-[10px]">Apoyo Entrenador</p>
+                <h3 class="text-xl sm:text-2xl font-bold mb-3 uppercase">Patricio Cantú</h3>
+                <p class="text-gray-400 text-sm leading-relaxed max-w-lg">Parte fundamental del equipo de entrenadores de Fenix Fight System. Apoyo en la formación técnica y desarrollo de los atletas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería & Videos (Compact dual cards) -->
+    <section id="certificaciones" class="py-8 px-4 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Certificaciones Card -->
+            <a href="galeria.html" class="relative overflow-hidden rounded-2xl bg-zinc-900 border border-yellow-600/20 p-5 sm:p-6 group hover:border-yellow-500/40 transition-all duration-500 block">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-600/10 rounded-full blur-[50px] pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-yellow-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="award" class="w-5 h-5 text-yellow-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base sm:text-lg font-bold uppercase leading-tight">Certificaciones</h3>
+                            <p class="text-[10px] text-yellow-500 uppercase tracking-widest font-bold">14+ Reconocimientos</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4 line-clamp-2">Certificaciones internacionales de WBC, FAMM, Combate Extremo y más.</p>
+                    <span class="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-600 to-yellow-700 px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest text-black group-hover:from-yellow-500 group-hover:to-yellow-600 transition-all">
+                        <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                        Ver Galería
+                    </span>
+                </div>
+            </a>
+
+            <!-- Videos Card -->
+            <a href="videos.html" id="videos" class="relative overflow-hidden rounded-2xl bg-zinc-900 border border-red-600/20 p-5 sm:p-6 group hover:border-red-500/40 transition-all duration-500 block">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-600/10 rounded-full blur-[50px] pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-red-600/10 rounded-xl flex items-center justify-center shrink-0">
+                            <i data-lucide="play-circle" class="w-5 h-5 text-red-500"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base sm:text-lg font-bold uppercase leading-tight">Videos</h3>
+                            <p class="text-[10px] text-red-500 uppercase tracking-widest font-bold">34+ Sesiones</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-xs sm:text-sm mb-4 line-clamp-2">Videos reales de entrenamiento, técnica y combate del equipo Fenix.</p>
+                    <span class="inline-flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-widest text-white group-hover:from-red-500 group-hover:to-red-600 transition-all">
+                        <i data-lucide="play-circle" class="w-3.5 h-3.5"></i>
+                        Ver Videos
+                    </span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Disciplinas / Catálogo -->
+    <section id="disciplinas" class="py-8 px-4 max-w-7xl mx-auto relative z-10">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-2">Nuestras <span class="text-red-600">Disciplinas</span></h2>
+            <div class="w-16 h-1 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <!-- Boxeo Clásico -->
+            <div class="card-dark p-4 rounded-xl group hover:border-red-600 transition duration-500 relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-red-600/10 rounded-lg flex items-center justify-center mb-3">
+                        <i data-lucide="target" class="w-5 h-5 text-red-600"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold uppercase mb-1">Boxeo Clásico</h3>
+                    <p class="text-gray-400 text-[11px] sm:text-xs leading-relaxed">Técnica, estrategia y acondicionamiento cardiovascular.</p>
+                </div>
+            </div>
+
+            <!-- Muay Thai -->
+            <div class="card-dark p-4 rounded-xl group hover:border-red-600 transition duration-500 relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-red-600/10 rounded-lg flex items-center justify-center mb-3">
+                        <i data-lucide="swords" class="w-5 h-5 text-red-600"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold uppercase mb-1">Muay Thai</h3>
+                    <p class="text-gray-400 text-[11px] sm:text-xs leading-relaxed mb-2">El arte de las 8 extremidades. Élite avalada.</p>
+                    <span class="text-[9px] sm:text-[10px] font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full uppercase">WBC Muay Thai</span>
+                </div>
+            </div>
+
+            <!-- MMA -->
+            <div class="card-dark p-4 rounded-xl group hover:border-red-600 transition duration-500 relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-red-600/10 rounded-lg flex items-center justify-center mb-3">
+                        <i data-lucide="shield-alert" class="w-5 h-5 text-red-600"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold uppercase mb-1">MMA</h3>
+                    <p class="text-gray-400 text-[11px] sm:text-xs leading-relaxed">Artes Marciales Mixtas. Combate de pie y dominio en piso.</p>
+                </div>
+            </div>
+
+            <!-- Catch Wrestling -->
+            <div class="card-dark p-4 rounded-xl group hover:border-red-600 transition duration-500 relative overflow-hidden">
+                <div class="absolute inset-0 bg-red-600/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                <div class="relative z-10">
+                    <div class="w-10 h-10 bg-red-600/10 rounded-lg flex items-center justify-center mb-3">
+                        <i data-lucide="grab" class="w-5 h-5 text-red-600"></i>
+                    </div>
+                    <h3 class="text-sm sm:text-base font-bold uppercase mb-1">Catch Wrestling</h3>
+                    <p class="text-gray-400 text-[11px] sm:text-xs leading-relaxed">Lucha y sumisión. Dominio cuerpo a cuerpo.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clase para Mujeres -->
+        <div class="mt-4 rounded-xl bg-gradient-to-r from-red-900/40 to-black border border-red-500/30 p-4 sm:p-5 flex items-center justify-between gap-4 group overflow-hidden relative">
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549476464-37392f717541?auto=format&fit=crop&q=80&w=1200')] opacity-10 bg-cover bg-center mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700"></div>
+            <div class="relative z-10 flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center shrink-0">
+                    <i data-lucide="star" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm sm:text-base font-bold uppercase text-white">Clase Especial para Mujeres</h3>
+                    <p class="text-gray-300 text-[11px] sm:text-xs">Deportes de contacto y acondicionamiento físico · <span class="text-red-400 font-bold">Rachel Piland</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ¿Qué necesitas? -->
+    <section class="py-8 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-2">¿QUÉ <span class="text-red-600">NECESITAS?</span></h2>
+            <div class="w-16 h-1 bg-red-600 mx-auto rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <!-- Equipo necesario -->
+            <div class="card-dark p-4 sm:p-5 rounded-xl border border-white/10">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="package" class="text-red-600 w-4 h-4 shrink-0"></i>
+                    <h3 class="text-sm font-bold uppercase">Equipo que llevar</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-1.5">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="text-red-500 w-3 h-3 shrink-0"></i>
+                        <span class="text-xs text-gray-300"><strong class="text-white">Vendas</strong> — 5 cm, manos y muñecas</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="text-red-500 w-3 h-3 shrink-0"></i>
+                        <span class="text-xs text-gray-300"><strong class="text-white">Ropa cómoda</strong> — shorts holgados</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="text-red-500 w-3 h-3 shrink-0"></i>
+                        <span class="text-xs text-gray-300"><strong class="text-white">Guantes de boxeo</strong> — cualquier medida</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="text-red-500 w-3 h-3 shrink-0"></i>
+                        <span class="text-xs text-gray-300"><strong class="text-white">Agua y toalla</strong></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="check" class="text-red-500 w-3 h-3 shrink-0"></i>
+                        <span class="text-xs text-gray-300"><strong class="text-white">Descalzo</strong> o calzado limpio</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Niveles / Metas -->
+            <div class="card-dark p-4 sm:p-5 rounded-xl border border-white/10">
+                <div class="flex items-center gap-2 mb-3">
+                    <i data-lucide="target" class="text-red-600 w-4 h-4 shrink-0"></i>
+                    <h3 class="text-sm font-bold uppercase">Tu meta, tu ritmo</h3>
+                </div>
+                <p class="text-gray-400 text-[11px] sm:text-xs mb-3">Metas individuales desde el primer día. Aplica para todas las disciplinas.</p>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="inline-flex items-center gap-1 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 text-[10px] sm:text-xs text-gray-300">
+                        <i data-lucide="book-open" class="text-yellow-500 w-3 h-3"></i> Bases reales
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 text-[10px] sm:text-xs text-gray-300">
+                        <i data-lucide="shield" class="text-yellow-500 w-3 h-3"></i> Defensa personal
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 text-[10px] sm:text-xs text-gray-300">
+                        <i data-lucide="trophy" class="text-orange-400 w-3 h-3"></i> Amateur
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-black/40 px-2.5 py-1 rounded-lg border border-white/5 text-[10px] sm:text-xs text-gray-300">
+                        <i data-lucide="trophy" class="text-red-400 w-3 h-3"></i> Semi-pro
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-gradient-to-r from-red-900/40 to-black/40 px-2.5 py-1 rounded-lg border border-red-600/30 text-[10px] sm:text-xs text-gray-300">
+                        <i data-lucide="flame" class="text-red-500 w-3 h-3"></i> <strong class="text-white">Profesional</strong>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Horarios y Info -->
+    <section id="horarios" class="py-8 bg-zinc-900/50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">INFO <span class="text-red-600">DEL DOJO</span></h2>
+                <div class="w-16 h-1 bg-red-600 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
+                <!-- Left Column: Info -->
+                <div class="lg:col-span-3 space-y-3">
+
+                    <!-- Horarios Row -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div class="bg-black/50 border border-white/5 p-3 rounded-xl text-center">
+                            <i data-lucide="users" class="text-red-600 w-4 h-4 mx-auto mb-1.5"></i>
+                            <p class="font-bold uppercase text-[10px] sm:text-xs">Clases Gustavo</p>
+                            <p class="text-yellow-500 font-bold text-[10px]">L-V: 7-9AM / 5-10PM</p>
+                        </div>
+                        <div class="bg-black/50 border border-white/5 p-3 rounded-xl text-center">
+                            <i data-lucide="flame" class="text-red-600 w-4 h-4 mx-auto mb-1.5"></i>
+                            <p class="font-bold uppercase text-[10px] sm:text-xs">Clases Mujeres</p>
+                            <p class="text-yellow-500 font-bold text-[10px]">L-V: 5:00-7:30PM</p>
+                        </div>
+                        <div class="bg-black/50 border border-white/5 p-3 rounded-xl text-center">
+                            <i data-lucide="user-check" class="text-red-600 w-4 h-4 mx-auto mb-1.5"></i>
+                            <p class="font-bold uppercase text-[10px] sm:text-xs">Edad mínima</p>
+                            <p class="text-yellow-500 font-bold text-[10px]">Desde 12 años</p>
+                        </div>
+                        <div class="bg-black/50 border border-white/5 p-3 rounded-xl text-center">
+                            <i data-lucide="dumbbell" class="text-red-600 w-4 h-4 mx-auto mb-1.5"></i>
+                            <p class="font-bold uppercase text-[10px] sm:text-xs">Pesas</p>
+                            <p class="text-yellow-500 font-bold text-[10px]">L-V: 7AM-10PM</p>
+                            <p class="text-yellow-500 font-bold text-[10px]">Sáb: 8AM-2PM</p>
+                        </div>
+                    </div>
+
+                    <!-- Membresías -->
+                    <div class="bg-black/50 border border-white/5 p-3 sm:p-4 rounded-xl">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i data-lucide="wallet" class="text-red-600 w-4 h-4"></i>
+                            <h4 class="font-bold uppercase text-xs">Membresías</h4>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="bg-black/60 border border-white/10 rounded-lg p-2.5 text-center">
+                                <p class="text-white font-bold text-[10px] uppercase mb-1">Solo Pesas</p>
+                                <p class="text-yellow-500 font-black text-lg leading-none">$500<span class="text-[9px] font-normal text-gray-500">/mes</span></p>
+                                <p class="text-gray-500 text-[9px] mt-1">Sin inscripción</p>
+                            </div>
+                            <div class="bg-black/60 border border-red-600/30 rounded-lg p-2.5 text-center">
+                                <p class="text-white font-bold text-[10px] uppercase mb-1">Solo Boxeo</p>
+                                <p class="text-yellow-500 font-black text-lg leading-none">$650<span class="text-[9px] font-normal text-gray-500">/mes</span></p>
+                                <p class="text-gray-500 text-[9px] mt-1">Inscripción: $150</p>
+                            </div>
+                            <div class="bg-gradient-to-b from-red-900/30 to-black/60 border border-red-600/50 rounded-lg p-2.5 text-center relative">
+                                <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Completo</div>
+                                <p class="text-white font-bold text-[10px] uppercase mb-1 mt-1">Pesas + Boxeo</p>
+                                <p class="text-yellow-400 font-black text-lg leading-none">$1,000<span class="text-[9px] font-normal text-gray-500">/mes</span></p>
+                                <p class="text-gray-500 text-[9px] mt-1">Personalizado</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-500 text-[9px] mt-2 text-center italic">Día suelto boxeo: $100</p>
+                    </div>
+
+                    <!-- Beneficios -->
+                    <div class="bg-black/50 border border-white/5 p-3 sm:p-4 rounded-xl">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="shield-check" class="text-red-600 w-4 h-4"></i>
+                            <h4 class="font-bold uppercase text-xs">Beneficios incluidos</h4>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="inline-flex items-center gap-1 bg-black/40 px-2 py-1 rounded-lg border border-white/5 text-[10px] text-gray-300">
+                                <i data-lucide="stethoscope" class="text-red-500 w-3 h-3"></i> Consulta médica <strong class="text-white">GRATIS</strong>/mes
+                            </span>
+                            <span class="inline-flex items-center gap-1 bg-black/40 px-2 py-1 rounded-lg border border-white/5 text-[10px] text-gray-300">
+                                <i data-lucide="salad" class="text-green-500 w-3 h-3"></i> Asesoría <strong class="text-white">nutricional</strong>
+                            </span>
+                            <span class="inline-flex items-center gap-1 bg-black/40 px-2 py-1 rounded-lg border border-white/5 text-[10px] text-gray-300">
+                                <i data-lucide="user-round-check" class="text-yellow-500 w-3 h-3"></i> Entrenamiento <strong class="text-white">personalizado</strong>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Ubicación + Teléfono -->
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <a href="https://maps.app.goo.gl/8RHT7HF6ZMGexadD6" target="_blank" class="flex-1 bg-black/50 border border-white/5 p-3 rounded-xl flex items-center gap-3 hover:border-red-600/50 transition group">
+                            <div class="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center shrink-0">
+                                <i data-lucide="map-pin" class="text-red-600 w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-white text-xs font-medium">Donato Guerra, Centro, NLD</p>
+                                <span class="text-red-500 text-[10px] font-bold uppercase">Abrir Mapa →</span>
+                            </div>
+                        </a>
+                        <div class="bg-black/50 border border-white/5 p-3 rounded-xl flex items-center gap-3">
+                            <div class="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center shrink-0">
+                                <i data-lucide="phone" class="text-red-600 w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <p class="text-white text-xs font-medium">+52 867 164 3047</p>
+                                <p class="text-gray-500 text-[10px]">WhatsApp disponible</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Map -->
+                <div class="lg:col-span-2 rounded-2xl overflow-hidden border-2 border-zinc-800 shadow-xl h-[250px] sm:h-[300px] lg:h-full lg:min-h-[400px]">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3550.0!2d-99.5!3d27.48!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8661214e2c88f9c1%3A0x6d90a187747e439!2sDonato%20Guerra%2C%20Nuevo%20Laredo%2C%20Tamps.!5e0!3m2!1ses!2smx!4v1715600000000!5m2!1ses!2smx" 
+                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Quote -->
+            <div class="mt-4 p-3 rounded-xl border border-white/5 bg-black/40">
+                <p class="text-xs italic text-gray-400 text-center">"El Fénix renace de sus cenizas. Aquí forjamos campeones dentro y fuera del ring."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resultados y Testimonios -->
+    <section id="resultados" class="py-24 px-4 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-bold mb-4">NUESTROS <span class="text-red-600">RESULTADOS</span></h2>
+            <div class="w-20 h-1 bg-red-600 mx-auto rounded-full"></div>
+            <p class="mt-6 text-gray-400 max-w-2xl mx-auto">Disciplina, constancia y esfuerzo. Aquí no vendemos magia, forjamos resultados reales.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+            <!-- Testimonio 1 -->
+            <div class="card-dark rounded-2xl overflow-hidden group border border-white/10 hover:border-red-600/50 transition duration-500 relative max-w-sm mx-auto w-full">
+                <div class="h-64 sm:h-80 overflow-hidden relative">
+                    <img src="cliente.jpg" alt="Alumno de Fenix Fight System" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/40 to-transparent"></div>
+                </div>
+                <div class="p-6 relative z-10 -mt-16">
+                    <i data-lucide="quote" class="text-red-600/50 w-8 h-8 mb-4"></i>
+                    <p class="text-gray-300 italic font-medium leading-relaxed mb-6">"De 135 kilos en una cama de hospital a recuperar mi vida. Mi mayor victoria no fue bajar de peso ni ganar una pelea; fue recuperar el respeto por el hombre que veo en el espejo. La pelea no termina cuando caes, sino cuando decides no levantarte."</p>
+                    <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                        <div class="w-10 h-10 rounded-full bg-red-900 flex items-center justify-center font-bold text-white shrink-0">
+                            GC
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white uppercase text-sm">Gustavo Cantú</h4>
+                            <p class="text-xs text-red-500 font-bold tracking-widest uppercase">Head Coach (de 135kg a 78kg)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Testimonio 2 (Jerry) -->
+            <div class="card-dark rounded-2xl overflow-hidden group border border-white/10 hover:border-red-600/50 transition duration-500 relative max-w-sm mx-auto w-full">
+                <!-- Ribbon "Transformación Real" -->
+                <div class="absolute top-4 -right-12 bg-red-600 text-white text-xs font-bold uppercase tracking-widest py-1 px-12 rotate-45 z-20 shadow-lg">Transformación</div>
+                
+                <div class="h-64 sm:h-80 overflow-hidden relative">
+                    <img src="jerry_pose.jpg" alt="Jerry Alcalá - Fenix Fight System" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/40 to-transparent"></div>
+                </div>
+                <div class="p-6 relative z-10 -mt-16">
+                    <i data-lucide="quote" class="text-red-600/50 w-8 h-8 mb-4"></i>
+                    <p class="text-gray-300 italic font-medium leading-relaxed mb-6">"El ejemplo vivo de que la disciplina vence cualquier obstáculo. Jerry dejó atrás la versión de sí mismo con la que no estaba conforme para construir un cuerpo y una mente imparables."</p>
+                    <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                        <div class="w-10 h-10 rounded-full bg-red-900 flex items-center justify-center font-bold text-white shrink-0">
+                            JA
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white uppercase text-sm">Jerry Alcalá</h4>
+                            <p class="text-xs text-red-500 font-bold tracking-widest uppercase">Alumno Destacado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonio 3 (Rachel) -->
+            <div class="card-dark rounded-2xl overflow-hidden group border border-white/10 hover:border-red-600/50 transition duration-500 relative max-w-sm mx-auto w-full">
+                <!-- Ribbon "Programa Mujeres" -->
+                <div class="absolute top-4 -right-12 bg-red-600 text-white text-xs font-bold uppercase tracking-widest py-1 px-12 rotate-45 z-20 shadow-lg">Mujeres</div>
+
+                <div class="h-64 sm:h-80 overflow-hidden relative">
+                    <img src="Rachel.png.jpeg" alt="Alumna Fenix Fight System - Rachel" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" style="object-position: center 70%;">
+                    <!-- Gradiente inferior -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-[#1a1a1a]/20 to-transparent"></div>
+                </div>
+                <div class="p-6 relative z-10 -mt-16">
+                    <i data-lucide="quote" class="text-red-600/50 w-8 h-8 mb-4"></i>
+                    <p class="text-gray-300 italic font-medium leading-relaxed mb-6">"Nunca imaginé que las artes marciales me darían tanta confianza y fuerza. El programa de mujeres en Fenix fue la mejor decisión que tomé para mi salud y disciplina."</p>
+                    <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                        <div class="w-10 h-10 rounded-full bg-red-900 flex items-center justify-center font-bold text-white shrink-0">
+                            R
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white uppercase text-sm">Rachel</h4>
+                            <p class="text-xs text-red-500 font-bold tracking-widest uppercase">Programa Especial Mujeres</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aquí podemos agregar más testimonios después -->
+        </div>
+
+        <!-- Galería de Transformación (El Cambio de Jerry) -->
+        <div class="mt-20">
+            <div class="text-center mb-10">
+                <h3 class="text-2xl sm:text-3xl font-bold mb-2 uppercase text-white">El Proceso de un Guerrero</h3>
+                <p class="text-gray-400">La evidencia física del entrenamiento en Fenix Fight System</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 bg-zinc-900/40 p-6 rounded-3xl border border-white/5">
+                <!-- Antes 1 -->
+                <div class="relative group overflow-hidden rounded-xl border-b-4 border-gray-600">
+                    <img src="jerry_antes1.jpg" alt="Jerry Antes 1" loading="lazy" class="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 blur-[0.5px]">
+                </div>
+                <!-- Antes 2 -->
+                <div class="relative group overflow-hidden rounded-xl border-b-4 border-gray-600">
+                    <img src="jerry.jpg" alt="Jerry Antes 2" loading="lazy" class="w-full h-48 sm:h-56 object-cover object-top group-hover:scale-105 transition-transform duration-500 opacity-90 blur-[0.5px]">
+                </div>
+                <!-- Proceso -->
+                <div class="relative group overflow-hidden rounded-xl border-b-4 border-orange-600">
+                    <img src="jerry_frente.jpg" alt="Jerry Frente" loading="lazy" class="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Fuerza -->
+                <div class="relative group overflow-hidden rounded-xl border-b-4 border-red-600">
+                    <img src="jerry_espalda.jpg" alt="Jerry Espalda" loading="lazy" class="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <!-- Resultados Finales -->
+                <div class="relative group overflow-hidden rounded-xl border-b-4 border-red-600 col-span-2 md:col-span-1 lg:col-span-1">
+                    <img src="jerry_pose.jpg" alt="Jerry Resultados" loading="lazy" class="w-full h-48 sm:h-56 object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Patrocinadores / Sponsors -->
+    <section id="patrocinadores" class="py-24 px-4 relative overflow-hidden">
+        <!-- Background glow -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-red-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-4">NUESTROS <span class="text-red-600">PATROCINADORES</span></h2>
+                <div class="w-20 h-1 bg-red-600 mx-auto rounded-full"></div>
+                <p class="mt-6 text-gray-400 max-w-2xl mx-auto">Empresas que respaldan nuestra misión y creen en la disciplina como estilo de vida.</p>
+            </div>
+
+            <!-- Scrolling Banner -->
+            <div class="relative mb-16 overflow-hidden rounded-2xl border border-white/5 bg-black/60 py-4">
+                <div class="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-black/90 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-black/90 to-transparent z-10 pointer-events-none"></div>
+                <div class="flex animate-scroll-sponsors whitespace-nowrap gap-12 items-center" style="animation: scrollSponsors 30s linear infinite;">
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Gorilla Customs</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">IMJUVE Nuevo Laredo</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">GOFA</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">El Mago Yayo</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Vía Salud Centro Médico</span>
+                    <span class="text-red-600/30">◆</span>
+                    <!-- Repeat for seamless loop -->
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Gorilla Customs</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">IMJUVE Nuevo Laredo</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">GOFA</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">El Mago Yayo</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Vía Salud Centro Médico</span>
+                    <span class="text-red-600/30">◆</span>
+                </div>
+            </div>
+
+            <!-- Sponsor Cards — 4 en horizontal -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5">
+
+                <!-- Gorilla Customs -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <!-- Accent top border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600"></div>
+                    <!-- Glow -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-all duration-700"></div>
+                    
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <!-- Logo area -->
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="gorilla_customs.png" alt="Gorilla Customs Logo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">Gorilla Customs</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5">Diseño y editor en general. <strong class="text-white">Especialista en maquila de uniformes y logotipos empresariales.</strong></p>
+                        
+                        <!-- Contact Info -->
+                        <div class="space-y-2 mt-auto">
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition">
+                                <i data-lucide="user" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-white font-semibold">Raúl Montes</span>
+                            </div>
+                            <a href="https://wa.me/528672845802" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-green-600/30 transition group/wa cursor-pointer">
+                                <i data-lucide="message-circle" class="text-green-500 w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform"></i>
+                                <span class="text-xs text-gray-300">+52 1 867 284 5802</span>
+                            </a>
+                            <a href="mailto:57montes@gmail.com" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer">
+                                <i data-lucide="mail" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300">57montes@gmail.com</span>
+                            </a>
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5">
+                                <i data-lucide="phone" class="text-yellow-500 w-3.5 h-3.5 shrink-0"></i>
+                                <div class="text-xs text-gray-300 flex flex-col">
+                                    <span>+52 867 134 4050</span>
+                                    <span>+52 867 184 5802</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IMJUVE Nuevo Laredo -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <!-- Accent top border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600"></div>
+                    <!-- Glow -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-all duration-700"></div>
+                    
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <!-- Logo area -->
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="patrocinador_2.png.jpg" alt="IMJUVE Nuevo Laredo Logo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">IMJUVE</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5"><strong class="text-white">Instituto Municipal de la Juventud</strong> de Nuevo Laredo. Impulsando el deporte y desarrollo juvenil.</p>
+                        
+                        <!-- Social / Contact -->
+                        <div class="space-y-2 mt-auto overflow-hidden">
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5">
+                                <i data-lucide="phone" class="text-yellow-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300">867 137 8750</span>
+                            </div>
+                            <a href="mailto:contacto@imjuvenuevolaredo.com.mx" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer min-w-0">
+                                <i data-lucide="mail" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300 truncate">contacto@imjuve.com.mx</span>
+                            </a>
+                            <a href="https://www.facebook.com/imjuvenl" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-blue-600/30 transition group/fb cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-blue-500 shrink-0 group-hover/fb:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.988H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                                <span class="text-xs text-gray-300">Facebook</span>
+                            </a>
+                            <a href="https://www.instagram.com/imjuvenuevolaredo" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-pink-600/30 transition group/ig cursor-pointer min-w-0">
+                                <svg class="w-3.5 h-3.5 fill-pink-500 shrink-0 group-hover/ig:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                                <span class="text-xs text-gray-300 truncate">@imjuvenuevolaredo</span>
+                            </a>
+                            <a href="https://imjuvenuevolaredo.com.mx" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer min-w-0">
+                                <i data-lucide="globe" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300 truncate">imjuvenuevolaredo.com.mx</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GOFA -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <!-- Accent top border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600"></div>
+                    <!-- Glow -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-all duration-700"></div>
+                    
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <!-- Logo area -->
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="gofa.jpeg" alt="GOFA Logo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">GOFA</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5"><strong class="text-white">GOFA Sportswear.</strong> Ropa deportiva y equipamiento para artes marciales y fitness.</p>
+                        
+                        <!-- Contact Info -->
+                        <div class="space-y-2 mt-auto">
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition">
+                                <i data-lucide="user" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-white font-semibold">Carlos López</span>
+                            </div>
+                            <a href="https://wa.me/528671487001" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-green-600/30 transition group/wa cursor-pointer">
+                                <i data-lucide="message-circle" class="text-green-500 w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform"></i>
+                                <span class="text-xs text-gray-300">+52 867 148 7001</span>
+                            </a>
+                            <a href="mailto:contacto@gofa.mx" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer">
+                                <i data-lucide="mail" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300">contacto@gofa.mx</span>
+                            </a>
+                            <a href="https://www.facebook.com/share/18T8PANi6r/" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-blue-600/30 transition group/fb cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-blue-500 shrink-0 group-hover/fb:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.988H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                                <span class="text-xs text-gray-300">Facebook</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- El Mago Yayo -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <!-- Accent top border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600"></div>
+                    <!-- Glow -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-all duration-700"></div>
+                    
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <!-- Logo area -->
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="MAGOYOYO.jpg" alt="El Mago Yayo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">El Mago Yayo</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5"><strong class="text-white">Contenido deportivo y entretenimiento.</strong> Creador de contenido y apoyo al deporte en Nuevo Laredo.</p>
+                        
+                        <!-- Social / Contact -->
+                        <div class="space-y-2 mt-auto">
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition">
+                                <i data-lucide="user" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-white font-semibold">Yayo</span>
+                            </div>
+                            <a href="https://www.instagram.com/medicenyayo01?igsh=MmozY2FlZWVhOWNn" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-pink-600/30 transition group/ig cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-pink-500 shrink-0 group-hover/ig:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                                <span class="text-xs text-gray-300">@medicenyayo01</span>
+                            </a>
+                            <a href="https://www.tiktok.com/@yayoeme?_r=1&_t=ZS-95K1X6C7Xvu" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-[#fe2c55]/30 transition group/tk cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-[#fe2c55] shrink-0 group-hover/tk:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                                <span class="text-xs text-gray-300">@yayoeme</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vía Salud Centro Médico -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <!-- Accent top border -->
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-orange-500 to-red-600"></div>
+                    <!-- Glow -->
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-red-600/5 rounded-full blur-3xl group-hover:bg-red-600/10 transition-all duration-700"></div>
+                    
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <!-- Logo area -->
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="viasaludcentromedico.jpg" alt="Vía Salud Centro Médico Logo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">Vía Salud</h3>
+                            </div>
+                        </div>
+                        
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5"><strong class="text-white">Vía Salud Centro Médico.</strong> Servicios médicos y laboratorio clínico en Nuevo Laredo.</p>
+                        
+                        <!-- Contact Info -->
+                        <div class="space-y-2 mt-auto overflow-hidden">
+                            <a href="tel:+528674066061" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-yellow-600/30 transition cursor-pointer">
+                                <i data-lucide="phone" class="text-yellow-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300">867 406 6061</span>
+                            </a>
+                            <a href="mailto:redesviasaludlab@gmail.com" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer min-w-0">
+                                <i data-lucide="mail" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-gray-300 truncate">redesviasaludlab@gmail.com</span>
+                            </a>
+                            <a href="https://www.facebook.com/viasaludcentromedico" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-blue-600/30 transition group/fb cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-blue-500 shrink-0 group-hover/fb:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.988H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                                <span class="text-xs text-gray-300">Facebook</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <style>
+        @keyframes scrollSponsors {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer id="contacto" class="py-12 bg-black border-t border-white/5 text-center">
+        <div class="max-w-7xl mx-auto px-4">
+            <h3 class="text-2xl font-bold mb-6 italic">FENIX FIGHT SYSTEM / PHOENIX F.C.</h3>
+            
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="https://www.facebook.com/share/18RoSxzx8T/" target="_blank" aria-label="Facebook" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-blue-600 transition">
+                    <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.988H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                </a>
+                <a href="https://wa.me/528671643047" aria-label="WhatsApp" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-green-600 transition">
+                    <i data-lucide="message-circle"></i>
+                </a>
+                <a href="https://maps.app.goo.gl/8RHT7HF6ZMGexadD6" target="_blank" aria-label="Ubicación" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition">
+                    <i data-lucide="map"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gustavoisraelcant?_r=1&_t=ZS-94tS5dgiOKw" target="_blank" aria-label="TikTok" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#fe2c55] transition group">
+                    <svg class="w-5 h-5 fill-white group-hover:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                </a>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 sm:gap-8 text-xs sm:text-sm text-gray-500 uppercase tracking-widest font-bold mb-8">
+                <span>Arte y Entretenimiento</span>
+                <span class="hidden sm:inline">•</span>
+                <span>Educación</span>
+                <span class="hidden sm:inline">•</span>
+                <span>Medicina y Salud</span>
+            </div>
+
+            <p class="text-gray-600 text-xs tracking-widest uppercase mt-8">
+                &copy; <span id="current-year"></span> Fenix Fight System. Todos los derechos reservados. <br class="hidden sm:block">
+                Forjado en Nuevo Laredo.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante de WhatsApp -->
+    <a href="https://wa.me/528671643047" class="fixed bottom-6 right-6 z-50 bg-green-600 text-white p-3 sm:p-4 rounded-full shadow-2xl hover:scale-110 transition-transform active:scale-95 flex items-center gap-2 group">
+        <i data-lucide="message-circle" class="w-6 h-6 sm:w-7 sm:h-7"></i>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 font-bold whitespace-nowrap px-0 group-hover:px-2 hidden sm:inline-block">Contáctanos</span>
+    </a>
+
+    <script>
+        // Set dynamic year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Inicializar Iconos Lucide
+        lucide.createIcons();
+
+        // Smooth scroll para los enlaces
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                const isHidden = mobileMenu.classList.contains('hidden');
+                
+                // Toggle icon between menu and x
+                if (isHidden) {
+                    mobileMenuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                } else {
+                    mobileMenuBtn.innerHTML = '<i data-lucide="x" class="w-6 h-6"></i>';
+                }
+                lucide.createIcons(); // Re-initialize the new icon
+            });
+
+            // Close menu when clicking a link
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                    lucide.createIcons();
+                });
+            });
+        }
+        
+        // Cierre de menú móvil al hacer scroll
+        window.addEventListener('scroll', () => {
+            if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+                lucide.createIcons();
+            }
+        });
+    </script>
+</body>
+</html>

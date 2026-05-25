@@ -7,7 +7,7 @@ import {
   makeFingerprintKey,
   normalizePath,
   parseDevice,
-  readGeo,
+  resolveGeo,
   type TrackPayload
 } from "@/lib/analytics";
 import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabase";
@@ -38,7 +38,8 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = getSupabaseAdmin();
-  const ipHash = hashIp(getClientIp(request));
+  const clientIp = getClientIp(request);
+  const ipHash = hashIp(clientIp);
   const fingerprintKey = makeFingerprintKey(payload, ipHash);
   const path = normalizePath(payload.path);
   const eventType = payload.eventType as string;
@@ -58,6 +59,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
+  const { source: geoSource, ...geo } = await resolveGeo(request, clientIp);
+  const metadata = {
+    ...(payload.metadata || {}),
+    geo_source: geoSource
+  };
+
   const { error } = await supabase.from("analytics_events").insert({
     event_type: eventType,
     path,
@@ -70,9 +77,9 @@ export async function POST(request: NextRequest) {
     ip_hash: ipHash,
     user_agent: userAgent.slice(0, 500),
     is_bot: false,
-    metadata: payload.metadata || {},
+    metadata,
     ...parseDevice(userAgent),
-    ...readGeo(request)
+    ...geo
   });
 
   if (error) {

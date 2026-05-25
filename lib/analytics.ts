@@ -37,6 +37,31 @@ export type AnalyticsEventRow = {
   metadata: Record<string, unknown> | null;
 };
 
+type GeoFields = {
+  country_code: string | null;
+  country_name: string | null;
+  region_code: string | null;
+  region_name: string | null;
+  city: string | null;
+  timezone: string | null;
+};
+
+type ResolvedGeo = GeoFields & {
+  source: "vercel" | "ipwhois";
+};
+
+type IpWhoIsResponse = {
+  success?: boolean;
+  country?: string;
+  country_code?: string;
+  region?: string;
+  region_code?: string;
+  city?: string;
+  timezone?: {
+    id?: string;
+  };
+};
+
 const allowedEvents = new Set([
   "page_view",
   "consent_update",
@@ -68,7 +93,24 @@ export function hashIp(ip: string) {
   return createHash("sha256").update(`${salt}:${ip}`).digest("hex");
 }
 
-export function readGeo(request: NextRequest) {
+function decodeHeader(value: string | null) {
+  if (!value) return null;
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function isLikelyPublicIp(ip: string) {
+  if (!ip || ip === "0.0.0.0" || ip === "::1") return false;
+  if (ip.startsWith("127.") || ip.startsWith("10.") || ip.startsWith("192.168.")) return false;
+  if (/^172\.(1[6-9]|2\d|3[0-1])\./.test(ip)) return false;
+  if (/^(fc|fd|fe80):/i.test(ip)) return false;
+  return true;
+}
+
+export function readGeo(request: NextRequest): GeoFields {
   const countryCode = request.headers.get("x-vercel-ip-country");
   const regionCode = request.headers.get("x-vercel-ip-country-region");
   const cityHeader = request.headers.get("x-vercel-ip-city");
@@ -79,8 +121,63 @@ export function readGeo(request: NextRequest) {
     country_name: countryName(countryCode),
     region_code: regionCode,
     region_name: regionName(countryCode, regionCode),
-    city: cityHeader ? decodeURIComponent(cityHeader) : null,
+    city: decodeHeader(cityHeader),
     timezone
+  };
+}
+
+async function lookupGeoFromIp(ip: string): Promise<GeoFields | null> {
+  if (!isLikelyPublicIp(ip)) return null;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1200);
+
+  try {
+    const response = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+      cache: "no-store",
+      signal: controller.signal
+    });
+
+    if (!response.ok) return null;
+
+    const data = (await response.json()) as IpWhoIsResponse;
+    if (data.success === false || !data.country_code) return null;
+
+    const countryCode = data.country_code.toUpperCase();
+    const regionCode = data.region_code || null;
+    const region = data.region || null;
+
+    return {
+      country_code: countryCode,
+      country_name: data.country || countryName(countryCode),
+      region_code: regionCode,
+      region_name: region || regionName(countryCode, regionCode),
+      city: data.city || null,
+      timezone: data.timezone?.id || null
+    };
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function resolveGeo(request: NextRequest, ip: string): Promise<ResolvedGeo> {
+  const vercelGeo = readGeo(request);
+  const externalGeo = await lookupGeoFromIp(ip);
+
+  if (!externalGeo) {
+    return { ...vercelGeo, source: "vercel" };
+  }
+
+  return {
+    country_code: externalGeo.country_code || vercelGeo.country_code,
+    country_name: externalGeo.country_name || vercelGeo.country_name,
+    region_code: externalGeo.region_code || vercelGeo.region_code,
+    region_name: externalGeo.region_name || vercelGeo.region_name,
+    city: externalGeo.city || vercelGeo.city,
+    timezone: externalGeo.timezone || vercelGeo.timezone,
+    source: "ipwhois"
   };
 }
 
