@@ -7,6 +7,7 @@ import {
   makeFingerprintKey,
   normalizePath,
   parseDevice,
+  resolveBrowserGeo,
   resolveGeo,
   sanitizeMetadata,
   type TrackPayload
@@ -45,6 +46,11 @@ export async function POST(request: NextRequest) {
   const path = normalizePath(payload.path);
   const eventType = payload.eventType as string;
   const dedupeSince = new Date(Date.now() - 15000).toISOString();
+  const hasBrowserGeo = Boolean(
+    payload.metadata &&
+      typeof payload.metadata === "object" &&
+      "browser_geo" in payload.metadata
+  );
 
   const { data: duplicate } = await supabase
     .from("analytics_events")
@@ -56,11 +62,11 @@ export async function POST(request: NextRequest) {
     .limit(1)
     .maybeSingle();
 
-  if (duplicate) {
+  if (duplicate && !hasBrowserGeo) {
     return NextResponse.json({ ok: true, duplicate: true });
   }
 
-  const resolvedGeo = await resolveGeo(request, clientIp);
+  const resolvedGeo = resolveBrowserGeo(payload.metadata) || (await resolveGeo(request, clientIp));
   const { source: geoSource, ...geo } = resolvedGeo;
   const metadata = {
     ...sanitizeMetadata(payload.metadata),
@@ -86,6 +92,19 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  }
+
+  if (geoSource === "browser_ipapi" && eventType === "consent_update" && payload.sessionId) {
+    const updateSince = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+    await supabase
+      .from("analytics_events")
+      .update({
+        ...geo
+      })
+      .eq("event_type", "page_view")
+      .eq("session_id", payload.sessionId)
+      .gte("created_at", updateSince);
   }
 
   return NextResponse.json({ ok: true });

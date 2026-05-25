@@ -100,6 +100,18 @@ function numberFormat(value: number) {
   return new Intl.NumberFormat("es-MX").format(value);
 }
 
+function dateTimeFormat(value: string) {
+  return new Intl.DateTimeFormat("es-MX", {
+    timeZone: "America/Mexico_City",
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
 function MetricCard({
   icon: Icon,
   label,
@@ -123,97 +135,53 @@ function MetricCard({
   );
 }
 
-function BucketList({
-  title,
-  items,
-  dimension,
-  onOpen
-}: {
-  title: string;
-  items: Bucket[];
-  dimension: DetailDimension;
-  onOpen: (dimension: DetailDimension, focusLabel?: string) => void;
-}) {
+function BucketList({ title, items }: { title: string; items: Bucket[] }) {
   const max = Math.max(...items.map((item) => item.value), 1);
 
   return (
-    <article className="panel-card clickable-panel" onClick={() => onOpen(dimension)}>
+    <article className="panel-card">
       <div className="bucket-heading">
         <h3>{title}</h3>
-        <span>
-          Ver detalle
-          <ArrowUpRight size={16} />
-        </span>
       </div>
       <div className="bucket-list">
         {items.length === 0 && <p className="muted">Sin datos todavía.</p>}
         {items.map((item) => (
-          <button
-            className="bucket-row bucket-row-button"
-            key={item.label}
-            onClick={(event) => {
-              event.stopPropagation();
-              onOpen(dimension, item.label);
-            }}
-          >
+          <div className="bucket-row" key={item.label}>
             <div>
               <span>{item.label}</span>
               <b>{numberFormat(item.value)}</b>
             </div>
             <i style={{ width: `${Math.max((item.value / max) * 100, 8)}%` }} />
-          </button>
+          </div>
         ))}
       </div>
     </article>
   );
 }
 
-function RecentVisitsList({
-  visits,
-  onOpen
-}: {
-  visits: RecentVisit[];
-  onOpen: (dimension: DetailDimension, focusLabel?: string) => void;
-}) {
+function RecentVisitsList({ visits }: { visits: RecentVisit[] }) {
   return (
     <section className="panel-card recent-panel">
       <div className="panel-title-row">
         <div>
-          <h2>Actividad reciente</h2>
-          <p>Lista simple de quiénes han visto el sitio, de dónde vienen y qué página abrieron.</p>
+          <h2>Visitas recientes</h2>
+          <p>Ubicación aproximada, día y hora de cada visualización.</p>
         </div>
-        <button className="secondary-button" onClick={() => onOpen("country")}>
-          Ver países
-          <ArrowUpRight size={16} />
-        </button>
       </div>
 
       <div className="recent-list">
         {visits.length === 0 && <p className="muted">Todavía no hay visitas en este periodo.</p>}
         {visits.map((visit) => (
-          <article className="recent-row" key={visit.id}>
+          <article className="recent-row simple-visit-row" key={visit.id}>
             <div className="recent-main">
               <strong>
                 {visit.country} · {visit.region}
               </strong>
-              <span>
-                {visit.city} · {visit.date}
-              </span>
+              <span>{visit.city}</span>
             </div>
             <div>
-              <b>{visit.path}</b>
-              <span>{visit.title || "Página sin título"}</span>
-            </div>
-            <div>
-              <b>{visit.source}</b>
-              <span>
-                {visit.device} · {visit.browser} · {visit.os}
-              </span>
-            </div>
-            <div className="recent-actions">
-              <button onClick={() => onOpen("country", visit.country)}>País</button>
-              <button onClick={() => onOpen("region", visit.region)}>Estado</button>
-              <button onClick={() => onOpen("page", visit.path)}>Página</button>
+              <b>{dateTimeFormat(visit.created_at)}</b>
+              <span>Hora local de México</span>
             </div>
           </article>
         ))}
@@ -464,107 +432,24 @@ export function AdminDashboard() {
             hint="Cookie aceptada o aproximación anónima"
           />
           <MetricCard
-            icon={MousePointerClick}
-            label="Contactos"
-            value={metrics?.totals.contacts || 0}
-            hint="Clics hacia WhatsApp/redes"
+            icon={Globe2}
+            label="Estados"
+            value={metrics?.regions.length || 0}
+            hint="Estados detectados"
           />
           <MetricCard
             icon={ShieldCheck}
-            label="Cookies aceptadas"
-            value={`${metrics?.totals.consentRate || 0}%`}
-            hint="Sobre pageviews del periodo"
+            label="Países"
+            value={metrics?.countries.length || 0}
+            hint="Países detectados"
           />
         </section>
 
-        <section className="panel-card chart-card">
-          <div className="panel-title-row">
-            <div>
-              <h2>Semana y mes</h2>
-              <p>Visualizaciones, visitantes únicos y contactos por día.</p>
-            </div>
-            <Globe2 size={24} />
-          </div>
-          <div className="chart-wrap">
-            {loading ? (
-              <p className="muted">Cargando métricas...</p>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id="views" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="5%" stopColor="#e7352f" stopOpacity={0.55} />
-                      <stop offset="95%" stopColor="#e7352f" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="visitors" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="5%" stopColor="#f4b85b" stopOpacity={0.45} />
-                      <stop offset="95%" stopColor="#f4b85b" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid stroke="#2c2c2c" vertical={false} />
-                  <XAxis dataKey="date" stroke="#8d8d8d" tick={{ fontSize: 12 }} />
-                  <YAxis allowDecimals={false} stroke="#8d8d8d" tick={{ fontSize: 12 }} />
-                  <Tooltip
-                    contentStyle={{
-                      background: "#111",
-                      border: "1px solid #333",
-                      borderRadius: 8,
-                      color: "#fff"
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="views"
-                    name="Vistas"
-                    stroke="#e7352f"
-                    fill="url(#views)"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="visitors"
-                    name="Visitantes"
-                    stroke="#f4b85b"
-                    fill="url(#visitors)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-        </section>
-
-        <RecentVisitsList visits={metrics?.recent || []} onOpen={openDetail} />
+        <RecentVisitsList visits={metrics?.recent || []} />
 
         <section className="admin-panels">
-          <BucketList
-            title="Países"
-            items={metrics?.countries || []}
-            dimension="country"
-            onOpen={openDetail}
-          />
-          <BucketList
-            title="Estados"
-            items={metrics?.regions || []}
-            dimension="region"
-            onOpen={openDetail}
-          />
-          <BucketList
-            title="Páginas"
-            items={metrics?.pages || []}
-            dimension="page"
-            onOpen={openDetail}
-          />
-          <BucketList
-            title="Fuentes"
-            items={metrics?.sources || []}
-            dimension="source"
-            onOpen={openDetail}
-          />
-          <BucketList
-            title="Dispositivos"
-            items={metrics?.devices || []}
-            dimension="device"
-            onOpen={openDetail}
-          />
+          <BucketList title="Estados" items={metrics?.regions || []} />
+          <BucketList title="Países" items={metrics?.countries || []} />
         </section>
 
         <p className="admin-note">
@@ -573,19 +458,6 @@ export function AdminDashboard() {
         </p>
       </section>
 
-      {activeDetail && (
-        <DetailModal
-          data={detailData}
-          loading={detailLoading}
-          selectedLabel={selectedLabel}
-          onSelectLabel={setSelectedLabel}
-          onClose={() => {
-            setActiveDetail(null);
-            setDetailData(null);
-            setSelectedLabel(null);
-          }}
-        />
-      )}
     </main>
   );
 }

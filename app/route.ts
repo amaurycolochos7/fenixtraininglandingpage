@@ -12,6 +12,7 @@ const analyticsScript = String.raw`
   var consentKey = "ffs_cookie_consent";
   var visitorCookie = "ffs_visitor_id";
   var sessionKey = "ffs_session_id";
+  var browserGeoKey = "ffs_browser_geo_sent";
 
   function createId(prefix) {
     var random = window.crypto && crypto.randomUUID
@@ -83,10 +84,36 @@ const analyticsScript = String.raw`
     }).catch(function () {});
   }
 
+  function sendBrowserIpGeo(consentOverride, force) {
+    if (!force && sessionStorage.getItem(browserGeoKey) === "true") return;
+
+    fetch("https://ipapi.co/json/", { cache: "no-store" })
+      .then(function (response) {
+        return response.ok ? response.json() : null;
+      })
+      .then(function (data) {
+        if (!data || data.error) return;
+        sessionStorage.setItem(browserGeoKey, "true");
+        sendEvent("consent_update", {
+          status: consentOverride || getConsent(),
+          browser_geo: {
+            country_code: data.country_code,
+            country_name: data.country_name,
+            region_code: data.region_code,
+            region: data.region,
+            city: data.city,
+            timezone: data.timezone
+          }
+        }, consentOverride);
+      })
+      .catch(function () {});
+  }
+
   function updateConsent(nextConsent) {
     localStorage.setItem(consentKey, nextConsent);
     if (nextConsent === "accepted") {
       getVisitorId("accepted");
+      sendBrowserIpGeo("accepted", true);
     } else {
       removeCookie(visitorCookie);
     }
@@ -139,6 +166,7 @@ const analyticsScript = String.raw`
 
   window.addEventListener("load", function () {
     sendEvent("page_view");
+    if (getConsent() === "accepted") sendBrowserIpGeo("accepted", false);
     createCookieBanner();
   });
 })();

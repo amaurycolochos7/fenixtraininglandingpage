@@ -47,7 +47,7 @@ type GeoFields = {
 };
 
 type ResolvedGeo = GeoFields & {
-  source: "vercel" | "ipapi" | "ipwhois";
+  source: "vercel" | "ipapi" | "ipwhois" | "browser_ipapi";
 };
 
 type IpApiResponse = {
@@ -60,6 +60,15 @@ type IpApiResponse = {
   timezone?: string;
   error?: boolean;
   reason?: string;
+};
+
+type BrowserGeoPayload = {
+  country_code?: unknown;
+  country_name?: unknown;
+  region_code?: unknown;
+  region?: unknown;
+  city?: unknown;
+  timezone?: unknown;
 };
 
 type IpWhoIsResponse = {
@@ -122,6 +131,21 @@ function isLikelyPublicIp(ip: string) {
   return true;
 }
 
+function cleanText(value: unknown) {
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function displayCountry(code?: string | null, fallback?: string | null) {
+  if (!code) return fallback || "Desconocido";
+  const known = countryName(code);
+  return known === code.toUpperCase() ? fallback || known : known;
+}
+
+function displayRegion(countryCode?: string | null, regionCode?: string | null, fallback?: string | null) {
+  const known = regionName(countryCode, regionCode);
+  return known === "Desconocido" || known === regionCode?.toUpperCase() ? fallback || known : known;
+}
+
 export function readGeo(request: NextRequest): GeoFields {
   const countryCode = request.headers.get("x-vercel-ip-country");
   const regionCode = request.headers.get("x-vercel-ip-country-region");
@@ -164,9 +188,9 @@ async function lookupGeoFromIp(ip: string): Promise<GeoFields | null> {
 
     return {
       country_code: countryCode,
-      country_name: data.country_name || countryName(countryCode),
+      country_name: displayCountry(countryCode, data.country_name || null),
       region_code: regionCode,
-      region_name: region || regionName(countryCode, regionCode),
+      region_name: displayRegion(countryCode, regionCode, region),
       city: data.city || null,
       timezone: data.timezone || null
     };
@@ -178,8 +202,34 @@ async function lookupGeoFromIp(ip: string): Promise<GeoFields | null> {
 }
 
 export function sanitizeMetadata(metadata?: Record<string, unknown>) {
-  const { precise_location: _preciseLocation, ...safeMetadata } = metadata || {};
+  const {
+    browser_geo: _browserGeo,
+    precise_location: _preciseLocation,
+    ...safeMetadata
+  } = metadata || {};
   return safeMetadata;
+}
+
+export function resolveBrowserGeo(metadata?: Record<string, unknown>): ResolvedGeo | null {
+  const browserGeo = metadata?.browser_geo as BrowserGeoPayload | undefined;
+  if (!browserGeo || typeof browserGeo !== "object") return null;
+
+  const countryCode = cleanText(browserGeo.country_code)?.toUpperCase() || null;
+  const regionCode = cleanText(browserGeo.region_code) || null;
+  const region = cleanText(browserGeo.region);
+  const city = cleanText(browserGeo.city);
+
+  if (!countryCode && !region && !city) return null;
+
+  return {
+    country_code: countryCode,
+    country_name: displayCountry(countryCode, cleanText(browserGeo.country_name)),
+    region_code: regionCode,
+    region_name: displayRegion(countryCode, regionCode, region),
+    city,
+    timezone: cleanText(browserGeo.timezone),
+    source: "browser_ipapi"
+  };
 }
 
 async function lookupGeoFromIpWhoIs(ip: string): Promise<GeoFields | null> {
@@ -205,9 +255,9 @@ async function lookupGeoFromIpWhoIs(ip: string): Promise<GeoFields | null> {
 
     return {
       country_code: countryCode,
-      country_name: data.country || countryName(countryCode),
+      country_name: displayCountry(countryCode, data.country || null),
       region_code: regionCode,
-      region_name: region || regionName(countryCode, regionCode),
+      region_name: displayRegion(countryCode, regionCode, region),
       city: data.city || null,
       timezone: data.timezone?.id || null
     };
