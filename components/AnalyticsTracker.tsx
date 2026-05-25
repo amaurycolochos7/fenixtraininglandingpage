@@ -172,8 +172,8 @@ export function AnalyticsTracker() {
       <div>
         <strong>Analítica responsable</strong>
         <p>
-          Al aceptar, nos ayudas a medir visitas reales, páginas consultadas, origen aproximado por
-          IP y efectividad de campañas. No guardamos tu IP cruda ni vendemos tus datos.
+          Al aceptar, nos ayudas a medir vistas reales, conocer qué páginas generan más interés y
+          mejorar nuestras campañas de marketing.
         </p>
       </div>
       <div className="cookie-actions">

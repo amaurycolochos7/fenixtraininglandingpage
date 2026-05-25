@@ -106,7 +106,7 @@ const analyticsScript = String.raw`
       '<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 md:mb-0">✓</div>' +
       '<div class="min-w-0 flex-1">' +
       '<strong class="block text-sm uppercase tracking-widest text-white">Analítica responsable</strong>' +
-      '<p class="mt-1 text-sm leading-relaxed text-gray-300">Al aceptar, nos ayudas a medir visitas reales, páginas consultadas, origen aproximado por IP y efectividad de campañas. No guardamos tu IP cruda ni vendemos tus datos.</p>' +
+      '<p class="mt-1 text-sm leading-relaxed text-gray-300">Al aceptar, nos ayudas a medir vistas reales, conocer qué páginas generan más interés y mejorar nuestras campañas de marketing.</p>' +
       '</div>' +
       '<div class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-0 md:flex">' +
       '<button type="button" data-cookie-reject class="rounded-lg border border-white/15 px-4 py-2 text-sm font-bold uppercase text-white">Rechazar</button>' +
