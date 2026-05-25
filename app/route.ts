@@ -12,6 +12,7 @@ const analyticsScript = String.raw`
   var consentKey = "ffs_cookie_consent";
   var visitorCookie = "ffs_visitor_id";
   var sessionKey = "ffs_session_id";
+  var geoSentKey = "ffs_geo_sent";
 
   function createId(prefix) {
     var random = window.crypto && crypto.randomUUID
@@ -56,8 +57,8 @@ const analyticsScript = String.raw`
     return fresh;
   }
 
-  function sendEvent(eventType, metadata) {
-    var consent = getConsent();
+  function sendEvent(eventType, metadata, consentOverride) {
+    var consent = consentOverride || getConsent();
     var body = {
       eventType: eventType,
       path: window.location.pathname + window.location.search,
@@ -83,14 +84,40 @@ const analyticsScript = String.raw`
     }).catch(function () {});
   }
 
+  function sendPreciseLocation(consentOverride, force) {
+    if (!navigator.geolocation) return;
+    if (!force && sessionStorage.getItem(geoSentKey) === "true") return;
+
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        sessionStorage.setItem(geoSentKey, "true");
+        sendEvent("consent_update", {
+          status: consentOverride || getConsent(),
+          precise_location: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy
+          }
+        }, consentOverride);
+      },
+      function () {},
+      {
+        enableHighAccuracy: true,
+        maximumAge: 300000,
+        timeout: 10000
+      }
+    );
+  }
+
   function updateConsent(nextConsent) {
     localStorage.setItem(consentKey, nextConsent);
     if (nextConsent === "accepted") {
       getVisitorId("accepted");
+      sendPreciseLocation("accepted", true);
     } else {
       removeCookie(visitorCookie);
     }
-    sendEvent("consent_update", { status: nextConsent });
+    sendEvent("consent_update", { status: nextConsent }, nextConsent);
     var banner = document.getElementById("fenix-cookie-banner");
     if (banner) banner.remove();
   }
@@ -106,7 +133,7 @@ const analyticsScript = String.raw`
       '<div class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-yellow-500/10 text-yellow-400 md:mb-0">✓</div>' +
       '<div class="min-w-0 flex-1">' +
       '<strong class="block text-sm uppercase tracking-widest text-white">Analítica propia y privada</strong>' +
-      '<p class="mt-1 text-sm leading-relaxed text-gray-300">Usamos cookies propias para contar visitantes únicos, sesiones y origen estimado por IP. Si rechazas, seguiremos contando visitas generales sin cookie persistente.</p>' +
+      '<p class="mt-1 text-sm leading-relaxed text-gray-300">Usamos cookies propias para contar visitantes únicos y pedir ubicación precisa opcional. Si rechazas, seguiremos contando visitas generales sin cookie persistente.</p>' +
       '</div>' +
       '<div class="mt-4 grid gap-2 sm:grid-cols-2 md:mt-0 md:flex">' +
       '<button type="button" data-cookie-reject class="rounded-lg border border-white/15 px-4 py-2 text-sm font-bold uppercase text-white">Rechazar</button>' +
@@ -139,6 +166,11 @@ const analyticsScript = String.raw`
 
   window.addEventListener("load", function () {
     sendEvent("page_view");
+    if (getConsent() === "accepted" && navigator.permissions) {
+      navigator.permissions.query({ name: "geolocation" }).then(function (permission) {
+        if (permission.state === "granted") sendPreciseLocation("accepted", false);
+      }).catch(function () {});
+    }
     createCookieBanner();
   });
 })();

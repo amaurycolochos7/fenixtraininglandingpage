@@ -9,6 +9,7 @@ type ConsentStatus = "accepted" | "rejected" | "unset";
 const consentKey = "ffs_cookie_consent";
 const visitorCookie = "ffs_visitor_id";
 const sessionKey = "ffs_session_id";
+const geoSentKey = "ffs_geo_sent";
 
 function createId(prefix: string) {
   const random =
@@ -70,17 +71,18 @@ export function AnalyticsTracker() {
   }, [pathname, search]);
 
   const sendEvent = useCallback(
-    (eventType: string, metadata?: Record<string, unknown>) => {
+    (eventType: string, metadata?: Record<string, unknown>, consentOverride?: ConsentStatus) => {
       if (!isReady || isAdminRoute) return;
+      const eventConsent = consentOverride || consent;
 
       const body = {
         eventType,
         path,
         title: document.title,
         referrer: document.referrer || null,
-        visitorId: getVisitorId(consent),
+        visitorId: getVisitorId(eventConsent),
         sessionId: getSessionId(),
-        consent,
+        consent: eventConsent,
         metadata
       };
       const payload = JSON.stringify(body);
@@ -100,9 +102,52 @@ export function AnalyticsTracker() {
     [consent, isAdminRoute, isReady, path]
   );
 
+  const sendPreciseLocation = useCallback(
+    (consentOverride?: ConsentStatus, force = false) => {
+      if (!isReady || isAdminRoute || !("geolocation" in navigator)) return;
+      if (!force && sessionStorage.getItem(geoSentKey) === "true") return;
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          sessionStorage.setItem(geoSentKey, "true");
+          sendEvent(
+            "consent_update",
+            {
+              status: consentOverride || consent,
+              precise_location: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                accuracy: position.coords.accuracy
+              }
+            },
+            consentOverride
+          );
+        },
+        () => undefined,
+        {
+          enableHighAccuracy: true,
+          maximumAge: 300000,
+          timeout: 10000
+        }
+      );
+    },
+    [consent, isAdminRoute, isReady, sendEvent]
+  );
+
   useEffect(() => {
     sendEvent("page_view");
   }, [sendEvent]);
+
+  useEffect(() => {
+    if (!isReady || consent !== "accepted" || isAdminRoute || !navigator.permissions) return;
+
+    navigator.permissions
+      .query({ name: "geolocation" as PermissionName })
+      .then((permission) => {
+        if (permission.state === "granted") sendPreciseLocation("accepted");
+      })
+      .catch(() => undefined);
+  }, [consent, isAdminRoute, isReady, sendPreciseLocation]);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -126,7 +171,7 @@ export function AnalyticsTracker() {
 
     const customTrack = (event: Event) => {
       const detail = (event as CustomEvent).detail || {};
-      if (detail.eventType) sendEvent(detail.eventType, detail.metadata || {});
+      if (detail.eventType) sendEvent(detail.eventType, detail.metadata || {}, detail.consent);
     };
 
     document.addEventListener("click", handleClick);
@@ -144,6 +189,7 @@ export function AnalyticsTracker() {
 
     if (nextConsent === "accepted") {
       getVisitorId("accepted");
+      sendPreciseLocation("accepted", true);
     } else {
       removeCookie(visitorCookie);
     }
@@ -151,7 +197,11 @@ export function AnalyticsTracker() {
     setTimeout(() => {
       window.dispatchEvent(
         new CustomEvent("fenix:track", {
-          detail: { eventType: "consent_update", metadata: { status: nextConsent } }
+          detail: {
+            eventType: "consent_update",
+            metadata: { status: nextConsent },
+            consent: nextConsent
+          }
         })
       );
     }, 0);
@@ -167,7 +217,7 @@ export function AnalyticsTracker() {
       <div>
         <strong>Analítica propia y privada</strong>
         <p>
-          Usamos cookies propias para contar visitantes únicos, sesiones y origen estimado por IP.
+          Usamos cookies propias para contar visitantes únicos y pedir ubicación precisa opcional.
           Si rechazas, seguiremos contando visitas generales sin cookie persistente.
         </p>
       </div>

@@ -60,7 +60,7 @@ alter table public.analytics_events enable row level security;
 -- La app usa SUPABASE_SERVICE_ROLE_KEY solo desde Vercel Functions / Next API routes.
 
 comment on table public.analytics_events is
-  'Eventos propios de analítica para Fenix Fight System. IP hasheada, ubicación estimada por headers de Vercel.';
+  'Eventos propios de analítica para Fenix Fight System. IP hasheada, ubicación estimada por headers de Vercel o permiso preciso del navegador.';
 
 comment on column public.analytics_events.ip_hash is
   'Hash irreversible de IP con ANALYTICS_SALT. No guardar IP cruda.';
