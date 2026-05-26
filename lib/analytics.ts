@@ -141,9 +141,44 @@ function displayCountry(code?: string | null, fallback?: string | null) {
   return known === code.toUpperCase() ? fallback || known : known;
 }
 
+function normalizeRegionFallback(countryCode?: string | null, fallback?: string | null) {
+  if (!fallback) return null;
+
+  const cleanCountry = countryCode?.toUpperCase();
+  const cleanFallback = fallback.trim();
+  const comparable = cleanFallback
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  if (cleanCountry === "MX") {
+    if (comparable === "mexico city" || comparable === "ciudad de mexico") {
+      return "Ciudad de México";
+    }
+
+    if (
+      comparable === "estado de mexico" ||
+      comparable === "mexico state" ||
+      comparable === "state of mexico"
+    ) {
+      return "Estado de México";
+    }
+  }
+
+  return cleanFallback;
+}
+
 function displayRegion(countryCode?: string | null, regionCode?: string | null, fallback?: string | null) {
+  const normalizedFallback = normalizeRegionFallback(countryCode, fallback);
   const known = regionName(countryCode, regionCode);
-  return known === "Desconocido" || known === regionCode?.toUpperCase() ? fallback || known : known;
+
+  if (countryCode?.toUpperCase() === "MX" && normalizedFallback === "Ciudad de México") {
+    return normalizedFallback;
+  }
+
+  return known === "Desconocido" || known === regionCode?.toUpperCase()
+    ? normalizedFallback || known
+    : known;
 }
 
 function sameCode(left?: string | null, right?: string | null) {
