@@ -1,75 +1,9 @@
 "use client";
 
-import { type ComponentType, useEffect, useMemo, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts";
-import {
-  ArrowUpRight,
-  Download,
-  Eye,
-  Globe2,
-  LogOut,
-  MousePointerClick,
-  RefreshCw,
-  ShieldCheck,
-  Users,
-  X
-} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Eye, RefreshCw, Users } from "lucide-react";
 
-type Bucket = { label: string; value: number };
 type SeriesItem = { date: string; views: number; visitors: number; contacts: number };
-type DetailDimension = "country" | "region" | "page" | "source" | "device";
-type DetailBucket = Bucket & {
-  percent: number;
-  visitors: number;
-  sessions: number;
-};
-type DetailVisit = {
-  id: string;
-  date: string;
-  created_at: string;
-  bucket_label: string;
-  path: string;
-  title: string | null;
-  country: string;
-  region: string;
-  city: string;
-  source: string;
-  device: string;
-  browser: string;
-  os: string;
-  consent: string;
-};
-type DetailData = {
-  title: string;
-  dimension: DetailDimension;
-  days: number;
-  total: number;
-  buckets: DetailBucket[];
-  recent: DetailVisit[];
-};
-type RecentVisit = {
-  id: string;
-  date: string;
-  created_at: string;
-  path: string;
-  title: string | null;
-  country: string;
-  region: string;
-  city: string;
-  source: string;
-  device: string;
-  browser: string;
-  os: string;
-  consent: string;
-};
 type Metrics = {
   configured: boolean;
   message?: string;
@@ -82,217 +16,58 @@ type Metrics = {
     consentRate: number;
   };
   series: SeriesItem[];
-  countries: Bucket[];
-  regions: Bucket[];
-  pages: Bucket[];
-  sources: Bucket[];
-  devices: Bucket[];
-  recent: RecentVisit[];
+  countries: never[];
+  regions: never[];
+  pages: never[];
+  sources: never[];
+  devices: never[];
+  recent: never[];
 };
 
 const ranges = [
-  { label: "7 días", days: 7 },
-  { label: "30 días", days: 30 },
-  { label: "90 días", days: 90 }
+  { label: "Hoy", days: 1 },
+  { label: "7d", days: 7 },
+  { label: "30d", days: 30 },
+  { label: "90d", days: 90 }
 ];
 
-function numberFormat(value: number) {
-  return new Intl.NumberFormat("es-MX").format(value);
+function numberFormat(n: number) {
+  return new Intl.NumberFormat("es-MX").format(n);
 }
 
-function dateTimeFormat(value: string) {
-  return new Intl.DateTimeFormat("es-MX", {
-    timeZone: "America/Mexico_City",
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(new Date(value));
+function shortDate(dateStr: string, days: number) {
+  const d = new Date(dateStr + "T12:00:00");
+  if (days <= 7) {
+    return new Intl.DateTimeFormat("es-MX", { weekday: "short" }).format(d);
+  }
+  return new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short" }).format(d);
 }
 
-function MetricCard({
-  icon: Icon,
-  label,
-  value,
-  hint
-}: {
-  icon: ComponentType<{ size?: number }>;
-  label: string;
-  value: string | number;
-  hint: string;
-}) {
-  return (
-    <article className="metric-card">
-      <div className="metric-icon">
-        <Icon size={22} />
-      </div>
-      <span>{label}</span>
-      <strong>{typeof value === "number" ? numberFormat(value) : value}</strong>
-      <p>{hint}</p>
-    </article>
-  );
-}
-
-function BucketList({ title, items }: { title: string; items: Bucket[] }) {
-  const max = Math.max(...items.map((item) => item.value), 1);
+function BarChart({ series, days }: { series: SeriesItem[]; days: number }) {
+  const max = Math.max(...series.map(s => s.views), 1);
+  const show = days === 1 ? series : days <= 7 ? series : series.slice(-Math.min(series.length, 30));
 
   return (
-    <article className="panel-card">
-      <div className="bucket-heading">
-        <h3>{title}</h3>
-      </div>
-      <div className="bucket-list">
-        {items.length === 0 && <p className="muted">Sin datos todavía.</p>}
-        {items.map((item) => (
-          <div className="bucket-row" key={item.label}>
-            <div>
-              <span>{item.label}</span>
-              <b>{numberFormat(item.value)}</b>
-            </div>
-            <i style={{ width: `${Math.max((item.value / max) * 100, 8)}%` }} />
+    <div className="fx-chart">
+      <div className="fx-bars">
+        {show.map(item => (
+          <div key={item.date} className="fx-bar-col" title={`${item.date}: ${item.views} vistas`}>
+            <div
+              className="fx-bar-fill"
+              style={{ height: `${Math.max((item.views / max) * 100, item.views > 0 ? 4 : 0)}%` }}
+            />
+            {show.length <= 14 && (
+              <span className="fx-bar-label">{shortDate(item.date, days)}</span>
+            )}
           </div>
         ))}
       </div>
-    </article>
-  );
-}
-
-function RecentVisitsList({ visits }: { visits: RecentVisit[] }) {
-  return (
-    <section className="panel-card recent-panel">
-      <div className="panel-title-row">
-        <div>
-          <h2>Visitas recientes</h2>
-          <p>Ubicación aproximada, día y hora de cada visualización.</p>
+      {show.length > 14 && (
+        <div className="fx-chart-ends">
+          <span>{shortDate(show[0].date, days)}</span>
+          <span>{shortDate(show[show.length - 1].date, days)}</span>
         </div>
-      </div>
-
-      <div className="recent-list">
-        {visits.length === 0 && <p className="muted">Todavía no hay visitas en este periodo.</p>}
-        {visits.map((visit) => (
-          <article className="recent-row simple-visit-row" key={visit.id}>
-            <div className="recent-main">
-              <strong>
-                {visit.country} · {visit.region}
-              </strong>
-              <span>{visit.city}</span>
-            </div>
-            <div>
-              <b>{dateTimeFormat(visit.created_at)}</b>
-              <span>Hora local de México</span>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function DetailModal({
-  data,
-  loading,
-  selectedLabel,
-  onSelectLabel,
-  onClose
-}: {
-  data: DetailData | null;
-  loading: boolean;
-  selectedLabel: string | null;
-  onSelectLabel: (label: string | null) => void;
-  onClose: () => void;
-}) {
-  const filteredRecent =
-    selectedLabel && data
-      ? data.recent.filter((visit) => visit.bucket_label === selectedLabel)
-      : data?.recent || [];
-
-  return (
-    <div className="detail-backdrop" role="dialog" aria-modal="true">
-      <section className="detail-modal">
-        <header className="detail-header">
-          <div>
-            <span className="eyebrow">Detalle real</span>
-            <h2>{data?.title || "Detalle"}</h2>
-            <p>
-              {loading
-                ? "Cargando datos..."
-                : `${numberFormat(data?.total || 0)} visualizaciones en el periodo seleccionado.`}
-            </p>
-          </div>
-          <button className="icon-button" onClick={onClose} aria-label="Cerrar detalle">
-            <X size={20} />
-          </button>
-        </header>
-
-        {loading && <div className="status-banner">Consultando Supabase...</div>}
-
-        {!loading && data && (
-          <>
-            <div className="detail-grid">
-              {data.buckets.length === 0 && <p className="muted">Sin datos para este periodo.</p>}
-              {data.buckets.map((bucket) => (
-                <button
-                  key={bucket.label}
-                  className={`detail-bucket ${selectedLabel === bucket.label ? "active" : ""}`}
-                  onClick={() =>
-                    onSelectLabel(selectedLabel === bucket.label ? null : bucket.label)
-                  }
-                >
-                  <div>
-                    <strong>{bucket.label}</strong>
-                    <span>{bucket.percent}% del total</span>
-                  </div>
-                  <div>
-                    <b>{numberFormat(bucket.value)}</b>
-                    <small>
-                      {numberFormat(bucket.visitors)} visitantes / {numberFormat(bucket.sessions)}{" "}
-                      sesiones
-                    </small>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <div className="detail-table-card">
-              <div className="detail-subhead">
-                <h3>{selectedLabel ? `Visitas de ${selectedLabel}` : "Visitas recientes"}</h3>
-                {selectedLabel && (
-                  <button className="ghost-button" onClick={() => onSelectLabel(null)}>
-                    Ver todo
-                  </button>
-                )}
-              </div>
-              <div className="detail-table">
-                {filteredRecent.length === 0 && <p className="muted">Sin visitas recientes.</p>}
-                {filteredRecent.map((visit) => (
-                  <article className="detail-visit" key={visit.id}>
-                    <div>
-                      <strong>{visit.bucket_label}</strong>
-                      <span>
-                        {visit.date} · {visit.path}
-                      </span>
-                    </div>
-                    <div>
-                      <b>
-                        {visit.country} / {visit.region}
-                      </b>
-                      <span>
-                        {visit.city} · {visit.device} · {visit.browser} · {visit.os}
-                      </span>
-                    </div>
-                    <div>
-                      <b>{visit.source}</b>
-                      <span>Cookies: {visit.consent}</span>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
-      </section>
+      )}
     </div>
   );
 }
@@ -302,50 +77,21 @@ export function AdminDashboard() {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [detailData, setDetailData] = useState<DetailData | null>(null);
-  const [detailLoading, setDetailLoading] = useState(false);
-  const [activeDetail, setActiveDetail] = useState<DetailDimension | null>(null);
-  const [selectedLabel, setSelectedLabel] = useState<string | null>(null);
+
 
   async function loadMetrics(nextDays = days) {
     setLoading(true);
     setError(null);
-
     try {
-      const response = await fetch(`/api/admin/metrics?days=${nextDays}`, { cache: "no-store" });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "No se pudieron cargar métricas.");
+      const res = await fetch(`/api/admin/metrics?days=${nextDays}`, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "No se pudieron cargar métricas.");
       setMetrics(data);
-    } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : "Error desconocido.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Error desconocido.");
     } finally {
       setLoading(false);
     }
-  }
-
-  async function openDetail(dimension: DetailDimension, focusLabel?: string) {
-    setActiveDetail(dimension);
-    setSelectedLabel(focusLabel || null);
-    setDetailLoading(true);
-
-    try {
-      const response = await fetch(`/api/admin/breakdown?dimension=${dimension}&days=${days}`, {
-        cache: "no-store"
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "No se pudo cargar el detalle.");
-      setDetailData(data);
-    } catch (detailError) {
-      setError(detailError instanceof Error ? detailError.message : "Error desconocido.");
-      setActiveDetail(null);
-    } finally {
-      setDetailLoading(false);
-    }
-  }
-
-  async function logout() {
-    await fetch("/api/admin/logout", { method: "POST" });
-    window.location.href = "/admin/login";
   }
 
   useEffect(() => {
@@ -353,111 +99,366 @@ export function AdminDashboard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days]);
 
-  const chartData = useMemo(() => metrics?.series || [], [metrics]);
+  const series = useMemo(() => metrics?.series || [], [metrics]);
+  const views = metrics?.totals.pageviews ?? 0;
+  const visitors = metrics?.totals.visitors ?? 0;
+  const periodLabel = days === 1 ? "hoy" : `últimos ${days} días`;
 
   return (
-    <main className="admin-shell">
-      <aside className="admin-sidebar">
-        <div className="admin-brand">
-          <img src="/logo.png" alt="Fenix Fight System" />
-          <div>
-            <strong>Fenix Analytics</strong>
-            <span>Panel privado</span>
-          </div>
-        </div>
+    <>
+      <style>{`
+        :root {
+          --fx-bg: #070707;
+          --fx-card: rgba(255,255,255,0.035);
+          --fx-border: rgba(255,255,255,0.08);
+          --fx-red: #d71920;
+          --fx-red2: #f04438;
+          --fx-brass: #f4b85b;
+          --fx-text: #e8e8e8;
+          --fx-muted: #555;
+          --fx-muted2: #888;
+          --fx-radius: 10px;
+        }
 
-        <nav>
-          <a href="/">Sitio público</a>
-          <a href="/galeria">Galería</a>
-          <a href="/videos">Videos</a>
-        </nav>
+        .fx-shell {
+          min-height: 100vh;
+          background: var(--fx-bg);
+          color: var(--fx-text);
+        }
 
-        <button className="ghost-button sidebar-logout" onClick={logout}>
-          <LogOut size={17} />
-          Salir
-        </button>
-      </aside>
+        /* ── TOPBAR ── */
+        .fx-topbar {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 0 24px;
+          height: 54px;
+          border-bottom: 1px solid var(--fx-border);
+          background: rgba(7,7,7,0.95);
+          backdrop-filter: blur(12px);
+          position: sticky;
+          top: 0;
+          z-index: 50;
+        }
 
-      <section className="admin-content">
-        <header className="admin-topbar">
-          <div>
-            <span className="eyebrow">Métricas reales</span>
-            <h1>Panel de visualizaciones</h1>
-            <p>
-              Conteo server-side con cookies propias, deduplicación corta y ubicación aproximada
-              por IP con proveedor externo.
-            </p>
+        .fx-brand {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-right: auto;
+        }
+
+        .fx-brand img { width: 28px; height: 28px; object-fit: contain; }
+
+        .fx-brand-name {
+          font-family: "Oswald", sans-serif;
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .fx-dot {
+          width: 6px; height: 6px;
+          border-radius: 50%;
+          background: var(--fx-red);
+        }
+
+        .fx-ranges {
+          display: flex;
+          gap: 2px;
+          padding: 3px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid var(--fx-border);
+          border-radius: 8px;
+        }
+
+        .fx-range-btn {
+          border: 0;
+          background: transparent;
+          color: var(--fx-muted2);
+          font-size: 12px;
+          font-weight: 700;
+          padding: 4px 11px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 130ms ease;
+          letter-spacing: 0.04em;
+        }
+
+        .fx-range-btn.active { background: var(--fx-red); color: #fff; }
+        .fx-range-btn:not(.active):hover { color: var(--fx-text); background: rgba(255,255,255,0.06); }
+
+        .fx-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          border: 1px solid var(--fx-border);
+          background: var(--fx-card);
+          color: var(--fx-muted2);
+          font-size: 12px;
+          font-weight: 700;
+          padding: 6px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 130ms ease;
+          text-decoration: none;
+          letter-spacing: 0.03em;
+        }
+
+        .fx-btn:hover { border-color: rgba(255,255,255,0.16); color: var(--fx-text); }
+        .fx-btn.danger:hover { border-color: rgba(215,25,32,0.4); color: var(--fx-red2); }
+
+        /* ── CONTENT ── */
+        .fx-content {
+          max-width: 860px;
+          margin: 0 auto;
+          padding: 36px 24px 60px;
+        }
+
+        /* ── ERROR ── */
+        .fx-error {
+          margin-bottom: 20px;
+          padding: 12px 16px;
+          border-radius: var(--fx-radius);
+          border: 1px solid rgba(240,68,56,0.3);
+          background: rgba(240,68,56,0.08);
+          color: #ffb8b2;
+          font-size: 13px;
+          font-weight: 600;
+        }
+
+        /* ── HERO ── */
+        .fx-hero {
+          margin-bottom: 28px;
+        }
+
+        .fx-hero-period {
+          font-size: 11px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.12em;
+          color: var(--fx-muted2);
+          margin-bottom: 10px;
+        }
+
+        .fx-hero-number {
+          font-family: "Oswald", sans-serif;
+          font-size: clamp(72px, 14vw, 120px);
+          line-height: 1;
+          color: #fff;
+          letter-spacing: -0.02em;
+          transition: opacity 200ms ease;
+        }
+
+        .fx-hero-number.loading { opacity: 0.25; }
+
+        .fx-hero-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 8px;
+          color: var(--fx-muted2);
+          font-size: 13px;
+          font-weight: 600;
+        }
+
+        .fx-hero-label svg { color: var(--fx-red2); }
+
+        /* ── SECONDARY STATS ── */
+        .fx-secondary {
+          display: flex;
+          gap: 24px;
+          padding: 18px 0;
+          border-top: 1px solid var(--fx-border);
+          border-bottom: 1px solid var(--fx-border);
+          margin-bottom: 28px;
+        }
+
+        .fx-sec-stat {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+
+        .fx-sec-value {
+          font-family: "Oswald", sans-serif;
+          font-size: 28px;
+          color: #fff;
+          line-height: 1;
+        }
+
+        .fx-sec-label {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: var(--fx-muted);
+        }
+
+        .fx-sec-divider {
+          width: 1px;
+          background: var(--fx-border);
+          align-self: stretch;
+          margin: 0 4px;
+        }
+
+        /* ── CHART ── */
+        .fx-chart-wrap {
+          border: 1px solid var(--fx-border);
+          border-radius: var(--fx-radius);
+          background: var(--fx-card);
+          padding: 20px 20px 16px;
+        }
+
+        .fx-chart-title {
+          font-size: 11px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: var(--fx-muted2);
+          margin-bottom: 16px;
+        }
+
+        .fx-chart { width: 100%; }
+
+        .fx-bars {
+          display: flex;
+          align-items: flex-end;
+          gap: 3px;
+          height: 120px;
+          width: 100%;
+        }
+
+        .fx-bar-col {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-end;
+          height: 100%;
+          gap: 6px;
+          cursor: default;
+        }
+
+        .fx-bar-fill {
+          width: 100%;
+          min-height: 0;
+          border-radius: 3px 3px 0 0;
+          background: linear-gradient(180deg, var(--fx-red2) 0%, var(--fx-red) 100%);
+          transition: height 500ms cubic-bezier(.22,1,.36,1), opacity 150ms ease;
+        }
+
+        .fx-bar-col:hover .fx-bar-fill { opacity: 0.75; }
+
+        .fx-bar-label {
+          font-size: 10px;
+          color: var(--fx-muted);
+          white-space: nowrap;
+          text-transform: capitalize;
+        }
+
+        .fx-chart-ends {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 8px;
+          font-size: 11px;
+          color: var(--fx-muted);
+        }
+
+        .fx-footer-note {
+          margin-top: 28px;
+          font-size: 12px;
+          color: var(--fx-muted);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+          .fx-topbar { padding: 0 14px; gap: 8px; flex-wrap: wrap; height: auto; min-height: 52px; padding-top: 8px; padding-bottom: 8px; }
+          .fx-brand-name { display: none; }
+          .fx-content { padding: 24px 14px 48px; }
+          .fx-hero-number { font-size: clamp(64px, 18vw, 96px); }
+          .fx-btn span { display: none; }
+        }
+      `}</style>
+
+      <div className="fx-shell">
+        {/* TOPBAR */}
+        <header className="fx-topbar">
+          <div className="fx-brand">
+            <img src="/logo.png" alt="Fenix" />
+            <span className="fx-brand-name">Fenix Analytics</span>
+            <span className="fx-dot" />
           </div>
-          <div className="admin-actions">
-            <div className="range-control">
-              {ranges.map((range) => (
-                <button
-                  key={range.days}
-                  className={days === range.days ? "active" : ""}
-                  onClick={() => setDays(range.days)}
-                >
-                  {range.label}
-                </button>
-              ))}
-            </div>
-            <button className="secondary-button" onClick={() => loadMetrics(days)}>
-              <RefreshCw size={17} />
-              Actualizar
-            </button>
-            <a className="secondary-button" href="/api/admin/export">
-              <Download size={17} />
-              CSV
-            </a>
+
+          <div className="fx-ranges">
+            {ranges.map(r => (
+              <button
+                key={r.days}
+                className={`fx-range-btn${days === r.days ? " active" : ""}`}
+                onClick={() => setDays(r.days)}
+              >
+                {r.label}
+              </button>
+            ))}
           </div>
+
+          <button className="fx-btn" onClick={() => loadMetrics(days)}>
+            <RefreshCw size={13} />
+            <span>Actualizar</span>
+          </button>
         </header>
 
-        {error && <div className="status-banner danger">{error}</div>}
-        {metrics && !metrics.configured && (
-          <div className="status-banner">
-            {metrics.message} El panel ya está montado; faltan credenciales y tabla en Supabase.
+        {/* CONTENT */}
+        <div className="fx-content">
+          {error && <div className="fx-error">{error}</div>}
+
+          {/* BIG NUMBER */}
+          <div className="fx-hero">
+            <div className="fx-hero-period">{periodLabel}</div>
+            <div className={`fx-hero-number${loading ? " loading" : ""}`}>
+              {numberFormat(views)}
+            </div>
+            <div className="fx-hero-label">
+              <Eye size={14} />
+              visualizaciones
+            </div>
           </div>
-        )}
 
-        <section className="metric-grid">
-          <MetricCard
-            icon={Eye}
-            label="Visualizaciones"
-            value={metrics?.totals.pageviews || 0}
-            hint="Cargas de página válidas"
-          />
-          <MetricCard
-            icon={Users}
-            label="Visitantes"
-            value={metrics?.totals.visitors || 0}
-            hint="Cookie aceptada o aproximación anónima"
-          />
-          <MetricCard
-            icon={Globe2}
-            label="Estados"
-            value={metrics?.regions.length || 0}
-            hint="Estados detectados"
-          />
-          <MetricCard
-            icon={ShieldCheck}
-            label="Países"
-            value={metrics?.countries.length || 0}
-            hint="Países detectados"
-          />
-        </section>
+          {/* SECONDARY */}
+          <div className="fx-secondary">
+            <div className="fx-sec-stat">
+              <span className="fx-sec-value">{loading ? "—" : numberFormat(visitors)}</span>
+              <span className="fx-sec-label">
+                <Users size={10} style={{ display: "inline", marginRight: 4 }} />
+                visitantes únicos
+              </span>
+            </div>
+            {days > 1 && (
+              <>
+                <div className="fx-sec-divider" />
+                <div className="fx-sec-stat">
+                  <span className="fx-sec-value">
+                    {loading ? "—" : numberFormat(Math.round(views / days))}
+                  </span>
+                  <span className="fx-sec-label">promedio por día</span>
+                </div>
+              </>
+            )}
+          </div>
 
-        <RecentVisitsList visits={metrics?.recent || []} />
+          {/* BAR CHART */}
+          {series.length > 0 && (
+            <div className="fx-chart-wrap">
+              <div className="fx-chart-title">Vistas por día</div>
+              <BarChart series={series} days={days} />
+            </div>
+          )}
 
-        <section className="admin-panels">
-          <BucketList title="Estados" items={metrics?.regions || []} />
-          <BucketList title="Países" items={metrics?.countries || []} />
-        </section>
-
-        <p className="admin-note">
-          Nota: la ubicación se estima automáticamente por IP. País suele ser más confiable que
-          estado/ciudad; VPN, datos móviles y proveedores pueden mover la ubicación reportada.
-        </p>
-      </section>
-
-    </main>
+          <p className="fx-footer-note">
+            Vistas únicas de página — bots y crawlers filtrados automáticamente.
+          </p>
+        </div>
+      </div>
+    </>
   );
 }

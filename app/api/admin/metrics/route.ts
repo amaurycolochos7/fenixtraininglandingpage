@@ -1,89 +1,64 @@
 import { NextResponse, type NextRequest } from "next/server";
-import {
-  dateDaysAgo,
-  emptySeries,
-  localDateKey,
-  type AnalyticsEventRow
-} from "@/lib/analytics";
+import { emptySeries, localDateKey, type AnalyticsEventRow } from "@/lib/analytics";
 import { isAdminRequest } from "@/lib/admin-auth";
-import { increment, refSource, top } from "@/lib/admin-metrics";
 import { getSupabaseAdmin, hasSupabaseConfig } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
-async function fetchEvents(days: number) {
+function startOfTodayMexico(): string {
+  const mexicoDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date());
+  return new Date(`${mexicoDate}T00:00:00-06:00`).toISOString();
+}
+
+function sinceForDays(days: number): string {
+  if (days === 1) return startOfTodayMexico();
+  const date = new Date();
+  date.setDate(date.getDate() - days);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+}
+
+async function fetchPageViews(days: number) {
   const supabase = getSupabaseAdmin();
-  const since = dateDaysAgo(days).toISOString();
-  const rows: AnalyticsEventRow[] = [];
+  const since = sinceForDays(days);
+  const rows: Pick<AnalyticsEventRow, "id" | "created_at" | "visitor_id" | "session_id" | "fingerprint_key">[] = [];
   const pageSize = 1000;
 
   for (let from = 0; from < 10000; from += pageSize) {
     const { data, error } = await supabase
       .from("analytics_events")
-      .select(
-        "id, created_at, event_type, path, title, referrer, visitor_id, session_id, fingerprint_key, consent_status, country_code, country_name, region_code, region_name, city, timezone, device_type, browser, os, is_bot, metadata"
-      )
+      .select("id, created_at, visitor_id, session_id, fingerprint_key")
+      .eq("event_type", "page_view")
       .gte("created_at", since)
       .order("created_at", { ascending: true })
       .range(from, from + pageSize - 1);
 
     if (error) throw error;
-    rows.push(...((data || []) as AnalyticsEventRow[]));
+    rows.push(...(data || []));
     if (!data || data.length < pageSize) break;
   }
 
   return rows;
 }
 
-type PreferredGeo = Pick<
-  AnalyticsEventRow,
-  "country_code" | "country_name" | "region_code" | "region_name" | "city" | "timezone"
->;
-
-type PreferredGeoMaps = {
-  bySession: Map<string, PreferredGeo>;
-  byVisitor: Map<string, PreferredGeo>;
+const emptyResponse = {
+  ok: true,
+  configured: false,
+  message: "Supabase todavía no está configurado en .env.local.",
+  totals: { pageviews: 0, visitors: 0, sessions: 0, contacts: 0, consentRate: 0 },
+  series: emptySeries(30),
+  countries: [],
+  regions: [],
+  pages: [],
+  sources: [],
+  devices: [],
+  recent: []
 };
-
-function hasBrowserGeo(event: AnalyticsEventRow) {
-  return event.metadata?.geo_source === "browser_ipapi";
-}
-
-function geoFromEvent(event: AnalyticsEventRow): PreferredGeo | null {
-  if (!hasBrowserGeo(event)) return null;
-  if (!event.country_name && !event.region_name && !event.city) return null;
-
-  return {
-    country_code: event.country_code,
-    country_name: event.country_name,
-    region_code: event.region_code,
-    region_name: event.region_name,
-    city: event.city,
-    timezone: event.timezone
-  };
-}
-
-function buildPreferredGeoMaps(events: AnalyticsEventRow[]): PreferredGeoMaps {
-  const bySession = new Map<string, PreferredGeo>();
-  const byVisitor = new Map<string, PreferredGeo>();
-
-  for (const event of events) {
-    const geo = geoFromEvent(event);
-    if (!geo) continue;
-    if (event.session_id) bySession.set(event.session_id, geo);
-    if (event.visitor_id) byVisitor.set(event.visitor_id, geo);
-  }
-
-  return { bySession, byVisitor };
-}
-
-function withPreferredGeo(event: AnalyticsEventRow, maps: PreferredGeoMaps): AnalyticsEventRow {
-  const geo =
-    (event.session_id && maps.bySession.get(event.session_id)) ||
-    (event.visitor_id && maps.byVisitor.get(event.visitor_id));
-
-  return geo ? { ...event, ...geo } : event;
-}
 
 export async function GET(request: NextRequest) {
   if (!isAdminRequest(request)) {
@@ -91,72 +66,21 @@ export async function GET(request: NextRequest) {
   }
 
   if (!hasSupabaseConfig()) {
-    return NextResponse.json({
-      ok: true,
-      configured: false,
-      message: "Supabase todavía no está configurado en .env.local.",
-      totals: {
-        pageviews: 0,
-        visitors: 0,
-        sessions: 0,
-        contacts: 0,
-        consentRate: 0
-      },
-      series: emptySeries(30),
-      countries: [],
-      regions: [],
-      pages: [],
-      sources: [],
-      devices: []
-    });
+    return NextResponse.json(emptyResponse);
   }
 
   const url = new URL(request.url);
-  const days = Math.min(Math.max(Number(url.searchParams.get("days") || 30), 7), 90);
-  const events = await fetchEvents(days);
-  const preferredGeoMaps = buildPreferredGeoMaps(events);
-  const pageViews = events
-    .filter((event) => event.event_type === "page_view")
-    .map((event) => withPreferredGeo(event, preferredGeoMaps));
-  const contacts = events.filter((event) => event.event_type === "contact_click");
-  const visitors = new Set(pageViews.map((event) => event.visitor_id || event.fingerprint_key));
-  const sessions = new Set(pageViews.map((event) => event.session_id || event.fingerprint_key));
-  const accepted = pageViews.filter((event) => event.consent_status === "accepted").length;
+  const days = Math.min(Math.max(Number(url.searchParams.get("days") || 30), 1), 90);
 
-  const byCountry = new Map<string, number>();
-  const byRegion = new Map<string, number>();
-  const byPage = new Map<string, number>();
-  const bySource = new Map<string, number>();
-  const byDevice = new Map<string, number>();
+  const pageViews = await fetchPageViews(days);
+  const visitors = new Set(pageViews.map(e => e.visitor_id || e.fingerprint_key));
+  const sessions = new Set(pageViews.map(e => e.session_id || e.fingerprint_key));
+
   const series = emptySeries(days);
-  const seriesIndex = new Map(series.map((item) => [item.date, item]));
+  const seriesIndex = new Map(series.map(item => [item.date, item]));
   const visitorsByDay = new Map<string, Set<string>>();
-  const recent = [...pageViews]
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 30)
-    .map((event) => ({
-      id: event.id,
-      date: localDateKey(event.created_at),
-      created_at: event.created_at,
-      path: event.path,
-      title: event.title,
-      country: event.country_name || "Desconocido",
-      region: event.region_name || "Desconocido",
-      city: event.city || "Desconocido",
-      source: refSource(event.referrer),
-      device: event.device_type || "Desconocido",
-      browser: event.browser || "Otro",
-      os: event.os || "Otro",
-      consent: event.consent_status
-    }));
 
   for (const event of pageViews) {
-    increment(byCountry, event.country_name);
-    increment(byRegion, event.region_name);
-    increment(byPage, event.path);
-    increment(bySource, refSource(event.referrer));
-    increment(byDevice, event.device_type);
-
     const date = localDateKey(event.created_at);
     const item = seriesIndex.get(date);
     if (item) {
@@ -164,12 +88,6 @@ export async function GET(request: NextRequest) {
       if (!visitorsByDay.has(date)) visitorsByDay.set(date, new Set());
       visitorsByDay.get(date)?.add(event.visitor_id || event.fingerprint_key);
     }
-  }
-
-  for (const event of contacts) {
-    const date = localDateKey(event.created_at);
-    const item = seriesIndex.get(date);
-    if (item) item.contacts += 1;
   }
 
   for (const item of series) {
@@ -184,15 +102,15 @@ export async function GET(request: NextRequest) {
       pageviews: pageViews.length,
       visitors: visitors.size,
       sessions: sessions.size,
-      contacts: contacts.length,
-      consentRate: pageViews.length ? Math.round((accepted / pageViews.length) * 100) : 0
+      contacts: 0,
+      consentRate: 0
     },
     series,
-    countries: top(byCountry),
-    regions: top(byRegion),
-    pages: top(byPage),
-    sources: top(bySource),
-    devices: top(byDevice),
-    recent
+    countries: [],
+    regions: [],
+    pages: [],
+    sources: [],
+    devices: [],
+    recent: []
   });
 }

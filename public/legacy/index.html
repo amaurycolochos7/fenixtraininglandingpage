@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fenix Fight System | Muay Thai & Disciplina</title>
+    <title>Fénix Fight System | Muay Thai & Disciplina</title>
     <!-- Preload LCP Image -->
     <link rel="preload" as="image" href="https://images.unsplash.com/photo-1599058917232-d750c185967c?auto=format&fit=crop&q=80&w=1920">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,6 +40,7 @@
             <!-- Desktop Menu -->
             <div class="hidden lg:flex gap-5 font-medium text-xs uppercase tracking-widest items-center">
                 <a href="#inicio" class="hover:text-red-500 transition">Inicio</a>
+                <a href="#evento" class="text-red-500 font-bold animate-pulse">⚡ Evento</a>
                 <a href="#filosofia" class="hover:text-red-500 transition">Filosofía</a>
                 <a href="#coach" class="hover:text-red-500 transition">Coach</a>
                 <a href="#certificaciones" class="hover:text-red-500 transition">Galería</a>
@@ -72,10 +73,21 @@
         </div>
     </nav>
 
+    <!-- Evento Próximo -->
+    <section id="evento" class="w-full bg-black pt-20">
+        <div class="max-w-2xl mx-auto px-4 py-8 flex flex-col items-center">
+            <p class="text-red-500 text-xs font-bold uppercase tracking-[0.25em] mb-3">⚡ Próximo evento</p>
+            <a href="evento.jpeg" target="_blank" class="block w-full rounded-2xl overflow-hidden shadow-2xl shadow-red-900/30 border border-white/10 hover:border-red-600/50 transition-all duration-300 hover:scale-[1.01]">
+                <img src="evento.jpeg" alt="Dragón Salazar vs Fénix Cantú — Box Profesional" class="w-full h-auto block">
+            </a>
+            <p class="text-gray-500 text-xs mt-3 tracking-widest uppercase">Fénix Fight System · Nuevo Laredo</p>
+        </div>
+    </section>
+
     <!-- Hero Section -->
     <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1599058917232-d750c185967c?auto=format&fit=crop&q=80&w=1920" alt="Muay Thai Training" fetchpriority="high" class="w-full h-full object-cover opacity-30">
+            <img src="jerry_pose.jpg" alt="Fénix Fight System — Entrenamiento" fetchpriority="high" class="w-full h-full object-cover opacity-30" style="object-position: center 20%">
             <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-black/80"></div>
         </div>
         
@@ -451,7 +463,7 @@
                                 <i data-lucide="map-pin" class="text-red-600 w-4 h-4"></i>
                             </div>
                             <div>
-                                <p class="text-white text-xs font-medium">Donato Guerra, Centro, NLD</p>
+                                <p class="text-white text-xs font-medium">Donato Guerra 1941, Centro, NLD</p>
                                 <span class="text-red-500 text-[10px] font-bold uppercase">Abrir Mapa →</span>
                             </div>
                         </a>
@@ -865,7 +877,7 @@
     <!-- Footer -->
     <footer id="contacto" class="py-12 bg-black border-t border-white/5 text-center">
         <div class="max-w-7xl mx-auto px-4">
-            <h3 class="text-2xl font-bold mb-6 italic">FENIX FIGHT SYSTEM / PHOENIX F.C.</h3>
+            <h3 class="text-2xl font-bold mb-6 italic">FÉNIX FIGHT SYSTEM / PHOENIX F.C.</h3>
             
             <div class="flex justify-center gap-6 mb-8">
                 <a href="https://www.facebook.com/share/18RoSxzx8T/" target="_blank" aria-label="Facebook" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-blue-600 transition">
@@ -891,8 +903,8 @@
             </div>
 
             <p class="text-gray-600 text-xs tracking-widest uppercase mt-8">
-                &copy; <span id="current-year"></span> Fenix Fight System. Todos los derechos reservados. <br class="hidden sm:block">
-                Forjado en Nuevo Laredo.
+                &copy; <span id="current-year"></span> Fénix Fight System. Todos los derechos reservados. <br class="hidden sm:block">
+                Donato Guerra 1941, Centro, Nuevo Laredo, Tamps.
             </p>
         </div>
     </footer>

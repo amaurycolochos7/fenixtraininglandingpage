@@ -5,10 +5,13 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="footer-grid">
         <div>
-          <img src="/logo.png" alt="Fenix Fight System" className="footer-logo" />
+          <img src="/logo.png" alt="Fénix Fight System" className="footer-logo" />
           <p>
             Muay Thai, disciplina y transformación real en Nuevo Laredo. Entrenamiento con
             mentalidad de combate y seguimiento humano.
+          </p>
+          <p style={{ marginTop: "8px", fontSize: "13px", opacity: 0.5 }}>
+            Donato Guerra 1941, Centro, NLD
           </p>
         </div>
         <div>
@@ -30,7 +33,7 @@ export function SiteFooter() {
           </p>
         </div>
       </div>
-      <p className="copyright">© {new Date().getFullYear()} Fenix Fight System.</p>
+      <p className="copyright">© {new Date().getFullYear()} Fénix Fight System.</p>
     </footer>
   );
 }

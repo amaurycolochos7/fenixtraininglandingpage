@@ -9,7 +9,6 @@ type ConsentStatus = "accepted" | "rejected" | "unset";
 const consentKey = "ffs_cookie_consent";
 const visitorCookie = "ffs_visitor_id";
 const sessionKey = "ffs_session_id";
-const browserGeoKey = "ffs_browser_geo_sent";
 
 function createId(prefix: string) {
   const random =
@@ -102,50 +101,9 @@ export function AnalyticsTracker() {
     [consent, isAdminRoute, isReady, path]
   );
 
-  const sendBrowserIpGeo = useCallback(
-    async (consentOverride?: ConsentStatus, force = false) => {
-      if (!isReady || isAdminRoute) return;
-      if (!force && sessionStorage.getItem(browserGeoKey) === "true") return;
-
-      try {
-        const response = await fetch("https://ipapi.co/json/", { cache: "no-store" });
-        if (!response.ok) return;
-        const data = await response.json();
-
-        if (!data || data.error) return;
-
-        sessionStorage.setItem(browserGeoKey, "true");
-        sendEvent(
-          "consent_update",
-          {
-            status: consentOverride || consent,
-            browser_geo: {
-              country_code: data.country_code,
-              country_name: data.country_name,
-              region_code: data.region_code,
-              region: data.region,
-              city: data.city,
-              timezone: data.timezone
-            }
-          },
-          consentOverride
-        );
-      } catch {
-        // Silent fallback: the server still resolves location by request IP.
-      }
-    },
-    [consent, isAdminRoute, isReady, sendEvent]
-  );
-
   useEffect(() => {
     sendEvent("page_view");
   }, [sendEvent]);
-
-  useEffect(() => {
-    if (consent === "accepted") {
-      sendBrowserIpGeo("accepted");
-    }
-  }, [consent, sendBrowserIpGeo]);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -187,7 +145,6 @@ export function AnalyticsTracker() {
 
     if (nextConsent === "accepted") {
       getVisitorId("accepted");
-      sendBrowserIpGeo("accepted", true);
     } else {
       removeCookie(visitorCookie);
     }
