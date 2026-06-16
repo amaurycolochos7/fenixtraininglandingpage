@@ -72,6 +72,39 @@
         </div>
     </nav>
 
+    <!-- Banner temporal de nueva ubicación -->
+    <section id="nueva-ubicacion" class="relative w-full bg-black px-4 pt-24 sm:pt-28 pb-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative overflow-hidden rounded-3xl border border-red-600/35 bg-[linear-gradient(135deg,#050505_0%,#141414_42%,#2b0507_100%)] shadow-2xl shadow-red-950/30">
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-700 via-yellow-500 to-red-700"></div>
+                <div class="absolute inset-0 opacity-25 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,.10)_36%,transparent_62%)] pointer-events-none"></div>
+                <div class="relative grid gap-6 lg:grid-cols-[1.15fr_.85fr] items-center p-5 sm:p-8 lg:p-10">
+                    <div>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.22em] text-yellow-400">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                            Cambio de ubicación
+                        </span>
+                        <h2 class="mt-4 text-3xl sm:text-5xl lg:text-6xl font-bold leading-tight text-white">
+                            Ahora entrenamos en <span class="text-gradient">Campeche 2019</span>
+                        </h2>
+                        <p class="mt-4 max-w-2xl text-sm sm:text-base text-gray-300 leading-relaxed">
+                            Nos cambiamos de domicilio. Te esperamos en nuestra nueva sede, casi esquina con Degollado, Nuevo Laredo.
+                        </p>
+                    </div>
+                    <div class="rounded-2xl border border-white/10 bg-black/55 p-4 sm:p-5">
+                        <p class="text-[10px] font-black uppercase tracking-[0.24em] text-red-500">Nueva dirección</p>
+                        <p class="mt-2 text-2xl sm:text-3xl font-black uppercase text-white font-['Oswald']">Campeche 2019</p>
+                        <p class="mt-1 text-sm text-gray-300">Casi esquina con Degollado · Nuevo Laredo</p>
+                        <a href="https://maps.app.goo.gl/buybSE9FNmZYgQ6z8?g_st=awb" target="_blank" rel="noopener" class="mt-5 inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl bg-fenix px-5 py-3 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-red-900/30 hover-fenix transition">
+                            <i data-lucide="navigation" class="w-4 h-4"></i>
+                            Abrir nueva ubicación
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Hero Section -->
     <section id="inicio" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div class="absolute inset-0 z-0">
@@ -446,7 +479,7 @@
 
                     <!-- Ubicación + Teléfono -->
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <a href="https://www.google.com/maps/search/?api=1&query=Campeche%202019%2C%20casi%20esquina%20con%20Degollado%2C%20Nuevo%20Laredo%2C%20Tamaulipas" target="_blank" class="flex-1 bg-black/50 border border-white/5 p-3 rounded-xl flex items-center gap-3 hover:border-red-600/50 transition group">
+                        <a href="https://maps.app.goo.gl/buybSE9FNmZYgQ6z8?g_st=awb" target="_blank" class="flex-1 bg-black/50 border border-white/5 p-3 rounded-xl flex items-center gap-3 hover:border-red-600/50 transition group">
                             <div class="w-8 h-8 bg-red-600/10 rounded-lg flex items-center justify-center shrink-0">
                                 <i data-lucide="map-pin" class="text-red-600 w-4 h-4"></i>
                             </div>
@@ -619,6 +652,8 @@
                     <span class="text-red-600/30">◆</span>
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">IMJUVE Nuevo Laredo</span>
                     <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">CBG</span>
+                    <span class="text-red-600/30">◆</span>
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">El Mago Yayo</span>
                     <span class="text-red-600/30">◆</span>
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Vía Salud Centro Médico</span>
@@ -629,6 +664,8 @@
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">Gorilla Customs</span>
                     <span class="text-red-600/30">◆</span>
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">IMJUVE Nuevo Laredo</span>
+                    <span class="text-red-600/30">◆</span>
+                    <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">CBG</span>
                     <span class="text-red-600/30">◆</span>
                     <span class="text-white/20 font-bold text-lg sm:text-2xl uppercase tracking-[0.3em] font-['Oswald']">El Mago Yayo</span>
                     <span class="text-red-600/30">◆</span>
@@ -728,6 +765,41 @@
                             <a href="https://imjuvenuevolaredo.com.mx" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-red-600/20 transition cursor-pointer min-w-0">
                                 <i data-lucide="globe" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
                                 <span class="text-xs text-gray-300 truncate">imjuvenuevolaredo.com.mx</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CBG -->
+                <div class="card-dark rounded-3xl p-6 sm:p-7 relative overflow-hidden group hover:border-red-600/50 transition-all duration-500 flex flex-col">
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-red-600 via-yellow-500 to-red-600"></div>
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-900/10 via-transparent to-black/20 pointer-events-none"></div>
+
+                    <div class="relative z-10 flex-1 flex flex-col">
+                        <div class="flex items-center gap-3 mb-5">
+                            <div class="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-2 border-red-600/30 shrink-0 bg-white/5">
+                                <img src="cbg.jpeg" alt="CBG Colegio Bilingüe Génesis Logo" class="w-full h-full object-cover drop-shadow-lg">
+                            </div>
+                            <div>
+                                <h3 class="text-base lg:text-lg font-bold uppercase text-white leading-tight">CBG</h3>
+                                <p class="text-[10px] text-yellow-500 uppercase tracking-widest font-bold">Colegio Bilingüe Génesis</p>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-400 text-xs leading-relaxed mb-5"><strong class="text-white">CBG.</strong> Patrocinador oficial de Fenix Fight System, impulsando disciplina, educación y desarrollo.</p>
+
+                        <div class="space-y-2 mt-auto">
+                            <div class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5">
+                                <i data-lucide="user" class="text-red-500 w-3.5 h-3.5 shrink-0"></i>
+                                <span class="text-xs text-white font-semibold">Directora Maestra Dora</span>
+                            </div>
+                            <a href="https://wa.me/528672308594" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-green-600/30 transition group/wa cursor-pointer">
+                                <i data-lucide="message-circle" class="text-green-500 w-3.5 h-3.5 shrink-0 group-hover/wa:scale-110 transition-transform"></i>
+                                <span class="text-xs text-gray-300">+52 867 230 8594</span>
+                            </a>
+                            <a href="https://www.facebook.com/profile.php?id=100063535064940" target="_blank" class="flex items-center gap-3 bg-black/40 px-3 py-2.5 rounded-xl border border-white/5 hover:border-blue-600/30 transition group/fb cursor-pointer">
+                                <svg class="w-3.5 h-3.5 fill-blue-500 shrink-0 group-hover/fb:scale-110 transition-transform" viewBox="0 0 24 24"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.988H7.898V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                                <span class="text-xs text-gray-300">Facebook</span>
                             </a>
                         </div>
                     </div>
@@ -858,7 +930,7 @@
                 <a href="https://wa.me/528671643047" aria-label="WhatsApp" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-green-600 transition">
                     <i data-lucide="message-circle"></i>
                 </a>
-                <a href="https://www.google.com/maps/search/?api=1&query=Campeche%202019%2C%20casi%20esquina%20con%20Degollado%2C%20Nuevo%20Laredo%2C%20Tamaulipas" target="_blank" aria-label="Ubicación" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition">
+                <a href="https://maps.app.goo.gl/buybSE9FNmZYgQ6z8?g_st=awb" target="_blank" aria-label="Ubicación" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-red-600 transition">
                     <i data-lucide="map"></i>
                 </a>
                 <a href="https://www.tiktok.com/@gustavoisraelcant?_r=1&_t=ZS-94tS5dgiOKw" target="_blank" aria-label="TikTok" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-[#fe2c55] transition group">
