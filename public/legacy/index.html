@@ -33,13 +33,14 @@
                 <div class="flex items-center justify-center mix-blend-screen bg-black" style="mix-blend-mode: screen;">
                     <img src="logo.png" alt="Logo Fenix" fetchpriority="high" class="h-16 w-auto md:h-20 object-contain drop-shadow-[0_0_15px_rgba(211,17,24,0.4)]" style="filter: contrast(1.2);">
                 </div>
-                <span class="text-xl font-bold tracking-tighter hidden sm:inline">FENIX <span class="text-red-600">FIGHT SYSTEM</span></span>
+                <span class="text-xl font-bold tracking-tighter hidden sm:inline whitespace-nowrap">FENIX <span class="text-red-600">FIGHT SYSTEM</span></span>
                 <span class="text-xl font-bold tracking-tighter sm:hidden">FENIX</span>
             </a>
             
             <!-- Desktop Menu -->
-            <div class="hidden lg:flex gap-5 font-medium text-xs uppercase tracking-widest items-center">
+            <div class="hidden xl:flex ml-6 gap-3.5 font-medium text-xs uppercase tracking-widest items-center">
                 <a href="#inicio" class="hover:text-red-500 transition">Inicio</a>
+                <a href="#boxeo-paz" class="text-yellow-500 hover:text-yellow-400 transition font-bold whitespace-nowrap">Boxeo Comunitario</a>
                 <a href="#filosofia" class="hover:text-red-500 transition">Filosofía</a>
                 <a href="#coach" class="hover:text-red-500 transition">Coach</a>
                 <a href="#certificaciones" class="hover:text-red-500 transition">Galería</a>
@@ -51,15 +52,16 @@
             </div>
 
             <!-- Mobile Menu Toggle Button -->
-            <button id="mobile-menu-btn" class="lg:hidden text-white hover:text-red-500 focus:outline-none transition">
+            <button id="mobile-menu-btn" class="xl:hidden text-white hover:text-red-500 focus:outline-none transition">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
 
         <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-black/95 backdrop-blur-md border-t border-white/10 absolute w-full left-0 top-full">
+        <div id="mobile-menu" class="hidden xl:hidden bg-black/95 backdrop-blur-md border-t border-white/10 absolute w-full left-0 top-full">
             <div class="flex flex-col px-4 py-6 space-y-6 font-medium text-sm uppercase tracking-widest text-center shadow-2xl">
                 <a href="#inicio" class="hover:text-red-500 transition mobile-link block">Inicio</a>
+                <a href="#boxeo-paz" class="text-yellow-500 hover:text-yellow-400 transition mobile-link block font-bold">Boxeo Comunitario · 13-29</a>
                 <a href="#filosofia" class="hover:text-red-500 transition mobile-link block">Filosofía</a>
                 <a href="#coach" class="hover:text-red-500 transition mobile-link block">Head Coach</a>
                 <a href="#certificaciones" class="hover:text-red-500 transition mobile-link block">Certificaciones</a>
@@ -100,6 +102,122 @@
                             Abrir nueva ubicación
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boxeando por la Paz — Programa Nacional de Boxeo Comunitario -->
+    <section id="boxeo-paz" class="relative w-full bg-black px-4 pb-6 scroll-mt-28 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="relative overflow-hidden rounded-3xl border border-[#9b2247]/45 bg-[linear-gradient(135deg,#060305_0%,#150910_45%,#3c0b1d_100%)] shadow-2xl shadow-[#9b2247]/20">
+                <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#9b2247] via-[#bc955c] to-[#9b2247]"></div>
+                <div class="absolute -top-24 -right-24 w-72 h-72 bg-[#9b2247]/25 rounded-full blur-[110px] pointer-events-none"></div>
+
+                <div class="relative p-5 sm:p-8 lg:p-10">
+
+                    <!-- Encabezado -->
+                    <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        <div>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-[#bc955c]/40 bg-[#bc955c]/10 px-3 py-1 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-[#e2c795]">
+                                <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
+                                Programa Nacional de Boxeo Comunitario
+                            </span>
+                            <h2 class="mt-4 text-3xl sm:text-5xl lg:text-6xl font-bold leading-[0.95] text-white">
+                                Boxeando <span class="text-gradient">por la Paz</span>
+                            </h2>
+                            <p class="mt-4 max-w-2xl text-sm sm:text-base text-gray-300 leading-relaxed">
+                                Fénix Fight System <strong class="text-white">(Phoenix Fight)</strong> es
+                                <strong class="text-white">gimnasio participante oficial</strong> del programa.
+                                Clases de boxeo dirigidas a adolescentes y jóvenes. <strong class="text-white">Inscripciones abiertas.</strong>
+                            </p>
+                        </div>
+
+                        <!-- Rango de edad -->
+                        <div class="shrink-0 self-start lg:self-auto rounded-2xl border border-[#bc955c]/30 bg-black/55 px-6 py-4 text-center">
+                            <p class="text-[10px] font-black uppercase tracking-[0.24em] text-[#bc955c]">Edad</p>
+                            <p class="font-['Oswald'] text-4xl sm:text-5xl font-bold leading-none text-white mt-1">13<span class="text-[#e0475a] px-1">–</span>29</p>
+                            <p class="mt-1.5 text-[10px] uppercase tracking-[0.2em] text-gray-400">Años de edad</p>
+                        </div>
+                    </div>
+
+                    <!-- Datos de la sede -->
+                    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="rounded-2xl border border-white/10 bg-black/45 p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="map-pin" class="text-[#e0475a] w-4 h-4 shrink-0"></i>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#bc955c]">Sede</p>
+                            </div>
+                            <p class="text-white font-bold text-sm uppercase font-['Oswald'] tracking-wide">Phoenix Fight</p>
+                            <p class="text-gray-300 text-xs mt-1 leading-relaxed">Campeche 2019, Col. Madero, C.P. 88270<br>Nuevo Laredo, Tamaulipas</p>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-black/45 p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="user-check" class="text-[#e0475a] w-4 h-4 shrink-0"></i>
+                                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#bc955c]">Entrenador</p>
+                            </div>
+                            <p class="text-white font-bold text-sm uppercase font-['Oswald'] tracking-wide">Luis Portillo Sandoval</p>
+                            <p class="text-gray-300 text-xs mt-1 leading-relaxed">Instructor asignado al programa en esta sede.</p>
+                        </div>
+
+                    </div>
+
+                    <!-- Horarios -->
+                    <div class="mt-3 rounded-2xl border border-white/10 bg-black/45 p-4 sm:p-5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i data-lucide="clock" class="text-[#e0475a] w-4 h-4 shrink-0"></i>
+                            <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#bc955c]">Horarios · Lunes a Viernes</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div class="rounded-xl border border-white/5 bg-black/50 px-4 py-3 text-center">
+                                <p class="font-['Oswald'] text-lg font-bold text-white leading-none">07:00 — 08:00</p>
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1.5">Matutino</p>
+                            </div>
+                            <div class="rounded-xl border border-white/5 bg-black/50 px-4 py-3 text-center">
+                                <p class="font-['Oswald'] text-lg font-bold text-white leading-none">08:00 — 09:00</p>
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1.5">Matutino</p>
+                            </div>
+                            <div class="rounded-xl border border-white/5 bg-black/50 px-4 py-3 text-center">
+                                <p class="font-['Oswald'] text-lg font-bold text-white leading-none">19:00 — 20:00</p>
+                                <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 mt-1.5">Vespertino</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Llamados a la acción -->
+                    <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                        <a href="https://jovenesconstruyendoelfuturo.stps.gob.mx/boxeandoporlapaz/registro_alumno.php" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-fenix px-6 py-4 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-red-900/30 hover-fenix transition">
+                            <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                            Inscríbete en línea
+                            <i data-lucide="external-link" class="w-3.5 h-3.5 opacity-70"></i>
+                        </a>
+                        <a href="https://wa.me/528671643047?text=Hola%2C%20quiero%20inscribirme%20a%20Boxeando%20por%20la%20Paz%20en%20Phoenix%20Fight" class="flex-1 inline-flex items-center justify-center gap-2 rounded-xl border border-green-600/40 bg-green-950/30 px-6 py-4 text-sm font-black uppercase tracking-widest text-white hover:bg-green-900/40 hover:border-green-500/60 transition">
+                            <i data-lucide="message-circle" class="w-4 h-4 text-green-500"></i>
+                            Te ayudamos a registrarte
+                        </a>
+                    </div>
+
+                    <p class="mt-3 text-[11px] text-gray-500 text-center sm:text-left">
+                        El registro se realiza en el portal oficial de la STPS · Informes del programa:
+                        <a href="tel:8671372300" class="text-[#bc955c] font-bold hover:text-[#e2c795] transition">867 137 2300</a>
+                    </p>
+
+                    <!-- Franja institucional -->
+                    <div class="mt-6 pt-5 border-t border-white/10 flex flex-wrap items-center justify-center lg:justify-start gap-x-3 gap-y-2">
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">Gobierno de México</span>
+                        <span class="text-[#9b2247] text-[8px]">◆</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">Secretaría de Bienestar</span>
+                        <span class="text-[#9b2247] text-[8px]">◆</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">Jóvenes Construyendo el Futuro</span>
+                        <span class="text-[#9b2247] text-[8px]">◆</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">STPS</span>
+                        <span class="text-[#9b2247] text-[8px]">◆</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">WBC</span>
+                        <span class="text-[#9b2247] text-[8px]">◆</span>
+                        <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em] text-gray-500">Delegación de Programas para el Bienestar Tamaulipas</span>
+                    </div>
+
                 </div>
             </div>
         </div>
